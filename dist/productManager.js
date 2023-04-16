@@ -58,9 +58,11 @@ class ProductManager {
             }
             this.products.push(product);
             this.saveProducts();
+            return true;
         }
         catch (error) {
             console.log(error);
+            return false;
         }
     }
     getProducts() {
