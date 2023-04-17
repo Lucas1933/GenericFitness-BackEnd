@@ -9,11 +9,10 @@ app.get("/", (req, res) => {
 
 app.get("/products", (req, res) => {
   const products = pm.getProducts();
-  const limit = parseInt(req.query.limit as string);
-
-  if (limit === undefined) {
+  if (req.query.limit === undefined) {
     res.status(200).send(products);
   }
+  const limit = parseInt(req.query.limit as string);
   if (limit > products.length || limit <= 0 || isNaN(limit)) {
     res.status(400).send({ error: "limit invalid" });
   }
