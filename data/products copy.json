@@ -4,7 +4,10 @@
     "description": "max muscle gain for your low-self esteem",
     "price": 1933,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-123",
     "stock": 10000,
     "id": 1
@@ -14,7 +17,10 @@
     "description": "This is a legal suplement, they are not steroids",
     "price": 800,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-124",
     "stock": 5254,
     "id": 2
@@ -24,7 +30,10 @@
     "description": "You read it! just powder, but of the best kind",
     "price": 3391,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-125",
     "stock": 8489,
     "id": 3
@@ -34,7 +43,10 @@
     "description": "Of the same joke",
     "price": 189,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-126",
     "stock": 100000000,
     "id": 4
@@ -44,7 +56,10 @@
     "description": "Its plain caffeine but marketing didnt like the honesty",
     "price": 3197,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-127",
     "stock": 1,
     "id": 5
@@ -54,7 +69,10 @@
     "description": "As generic as it gets",
     "price": 19,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-128",
     "stock": 10000,
     "id": 6
@@ -64,7 +82,10 @@
     "description": "Surely is not the same as the one before",
     "price": 3365,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-129",
     "stock": 10000,
     "id": 7
@@ -74,7 +95,10 @@
     "description": "A bowl full of egg yolks",
     "price": 1933,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-130",
     "stock": 10000,
     "id": 8
@@ -84,7 +108,10 @@
     "description": "the best one",
     "price": 1933,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-131",
     "stock": 10000,
     "id": 9
@@ -94,7 +121,10 @@
     "description": "because is the last one of the file",
     "price": 1933,
     "status": true,
-    "thumbnail": ["first image", "second image"],
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
     "code": "p-132",
     "stock": 10000,
     "id": 10
