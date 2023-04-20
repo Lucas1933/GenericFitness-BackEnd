@@ -62,8 +62,7 @@ export default class ProductManager {
       this.saveProducts();
       return true;
     } catch (error) {
-      console.log(error);
-      return false;
+      throw error;
     }
   }
   getProducts() {
@@ -83,32 +82,52 @@ export default class ProductManager {
   }
   updateProduct(id, fields) {
     try {
+      let productToBeUpdated = this.getProductById(id);
+      if (!productToBeUpdated) return false;
       if (fields.id) {
         throw new Error("id's can't be updated");
       }
-      if (typeof fields.title != "string") {
-        throw new TypeError("title must be a string");
+      if (fields["title"]) {
+        if (typeof fields.title != "string") {
+          throw new TypeError("title must be a string");
+        }
       }
-      if (typeof fields.description != "string") {
-        throw new TypeError("description must be a string");
+      if (fields["description"]) {
+        if (typeof fields.description != "string") {
+          throw new TypeError("description must be a string");
+        }
       }
-      if (typeof fields.price != "number") {
-        throw new TypeError("price must be a number");
+      if (fields["price"]) {
+        if (typeof fields.price != "number") {
+          throw new TypeError("price must be a number");
+        }
       }
-      if (typeof fields.status != "boolean") {
-        throw new TypeError("status must be a boolean");
+      if (fields["status"]) {
+        if (typeof fields.status != "boolean") {
+          throw new TypeError("status must be a boolean");
+        }
       }
-      if (!Array.isArray(fields.thumbnail)) {
-        throw new TypeError("thumbnail must be an array");
+      if (fields["thumbnail"]) {
+        if (!Array.isArray(fields.thumbnail)) {
+          throw new TypeError("thumbnail must be an array");
+        }
       }
-      if (typeof fields.code != "string") {
-        throw new TypeError("code must be a string");
+      if (fields["code"]) {
+        if (typeof fields.code != "string") {
+          throw new TypeError("code must be a string");
+        }
       }
-      if (typeof fields.stock != "number") {
-        throw new TypeError("stock must be a number");
+      if (fields["stock"]) {
+        if (typeof fields.stock != "number") {
+          throw new TypeError("stock must be a number");
+        }
       }
-      let productToBeUpdated = this.getProductById(id);
-      if (!productToBeUpdated) return false;
+      Object.keys(fields).forEach((eachFieldsKey) => {
+        console.log(eachFieldsKey);
+        if (!(eachFieldsKey in productToBeUpdated)) {
+          throw new Error(`the property ${eachFieldsKey} is invalid`);
+        }
+      });
       const validKeys = Object.keys(fields).filter(
         (key) => key in productToBeUpdated
       );
@@ -122,8 +141,7 @@ export default class ProductManager {
       this.saveProducts();
       return true;
     } catch (error) {
-      console.log(error);
-      return false;
+      throw error;
     }
   }
   deleteProduct(id) {
