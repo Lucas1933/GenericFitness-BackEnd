@@ -84,7 +84,8 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "express-handlebars": "^7.0.7"
+    "express-handlebars": "^7.0.7",
+    "socket.io": "^4.6.1"
   },
   "scripts": {
     "nodemon": "nodemon ./src/app.js"
