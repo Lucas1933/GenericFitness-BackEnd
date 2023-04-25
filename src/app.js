@@ -7,6 +7,7 @@ import viewsRouter from "./routes/viewsRouter.js";
 import __dirname from "./utils.js";
 const app = express();
 const port = 8080;
+
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
@@ -16,23 +17,14 @@ app.use(express.static(`${__dirname}/public`)); /* static content */
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
-
 const serverExpress = app.listen(port, () => {
   console.log(`server running and listening in port ${port}`);
 });
 const io = new Server(serverExpress);
 io.on("connection", (socket) => {
   console.log("new client", socket.id);
-  socket.on("anEvent", (data) => {
-    if (socket.id == "Af4ycIY3z2BSeefEAAAB") {
-      socket.id = "window_1";
-    } else if (socket.id == "_-Mm9Tw1VLTSB11-AAAD") {
-      socket.id = "window_2";
-    }
-    io.emit("divReciver", { id: socket.id, clicks: ++data });
-  });
 });
-
+app.set("socketio", io);
 /* const logs = []; */
 /* listening to events, handshake */
 /* io.on("connection", (socket) => {

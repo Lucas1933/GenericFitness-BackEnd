@@ -37,6 +37,7 @@ productsRouter.get("/:productId", (req, res) => {
 });
 productsRouter.post("/", (req, res) => {
   try {
+    const io = req.app.get("socketio");
     const { title, description, price, status, thumbnail, code, stock, id } =
       req.body;
     if (id) {
@@ -52,6 +53,7 @@ productsRouter.post("/", (req, res) => {
       stock
     );
     if (result) {
+      io.emit("updateProducts", pm.getProducts());
       return res
         .status(200)
         .send({ message: "Product added successfully", status: "success" });
@@ -103,11 +105,13 @@ productsRouter.put("/:productId", (req, res) => {
 });
 productsRouter.delete("/:productId", (req, res) => {
   try {
+    const io = req.app.get("socketio");
     const productId = parseInt(req.params.productId);
     if (isNaN(productId)) {
       return res.status(400).send({ error: "id must be a number" });
     }
     if (pm.deleteProduct(productId)) {
+      io.emit("updateProducts", pm.getProducts());
       return res
         .status(200)
         .send({ message: "Product deleted successfully", status: "success" });
@@ -119,4 +123,5 @@ productsRouter.delete("/:productId", (req, res) => {
     return res.status(500).send({ error: "internal server error" });
   }
 });
+
 export default productsRouter;

@@ -12,6 +12,7 @@ viewsRouter.get("/", (req, res) => {
 });
 
 viewsRouter.get("/realtimeproducts", (req, res) => {
-  res.render("realTimeProducts", { name: "name" });
+  const products = pm.getProducts();
+  res.render("realTimeProducts", { products: products });
 });
 export default viewsRouter;

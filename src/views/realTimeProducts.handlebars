@@ -1,5 +1,39 @@
-<div id="div"></div>
-<button id="button">Click</button>
-<p id="clickLogs"></p>
+<div
+  id="containerOfProducts"
+  style="display: grid; grid-template-columns: 1fr 1fr;"
+>
+  {{#each products}}
+    <div style="width: fit-content;">
+      <ul style="font-size: 22px; padding-left: 20px;">
+        <li>
+          <span style="text-decoration: underline;">Name:</span>
+          {{this.title}}</li>
+        <li><span style="text-decoration: underline;">Description:</span>
+          {{this.description}}</li>
+        <li>
+          <span
+            style="text-decoration: underline;"
+          >Price:</span>{{this.price}}</li>
+        <li><span style="text-decoration: underline;">Status:</span>
+          {{#if this.status}}
+            active
+          {{else}}
+            inactive
+          {{/if}}</li>
+        <li><span style="text-decoration: underline;">Thumbnails:</span>
+          {{this.thumbnail}}</li>
+        <li>
+          <span style="text-decoration: underline;">Code:</span>
+          {{this.code}}</li>
+        <li>
+          <span style="text-decoration: underline;">Stock:</span>
+          {{this.stock}}</li>
+        <li>
+          <span style="text-decoration: underline;">ID:</span>
+          {{this.id}}</li>
+      </ul>
+    </div>
+  {{/each}}
+</div>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/realTimeProducts.js"></script>
