@@ -27,8 +27,10 @@ export default class ProductManager {
       if (typeof price != "number") {
         throw new TypeError("price must be a number");
       }
-      if (typeof status != "boolean") {
-        throw new TypeError("status must be a boolean");
+      if (status) {
+        if (typeof status != "boolean") {
+          throw new TypeError("status must be a boolean");
+        }
       }
       if (!Array.isArray(thumbnail)) {
         throw new TypeError("thumbnail must be an array");
@@ -48,7 +50,7 @@ export default class ProductManager {
         title,
         description,
         price,
-        status,
+        true,
         thumbnail,
         code,
         stock
