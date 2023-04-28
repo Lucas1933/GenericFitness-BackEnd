@@ -130,7 +130,7 @@
     "id": 10
   },
   {
-    "title": "The ultimate product",
+    "title": "5",
     "description": "because is the last one of the file",
     "price": 1933,
     "status": true,
@@ -138,8 +138,21 @@
       "first image",
       "second image"
     ],
-    "code": "p-1ssssaaasssssss",
+    "code": "p-13sssssaaaa2",
     "stock": 10000,
     "id": 11
+  },
+  {
+    "title": "5",
+    "description": "because is the last one of the file",
+    "price": 1933,
+    "status": true,
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
+    "code": "p-13sssssssaaaa2",
+    "stock": 10000,
+    "id": 12
   }
 ]

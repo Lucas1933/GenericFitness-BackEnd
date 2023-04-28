@@ -6,19 +6,20 @@ import cartsRouter from "./routes/cartsRouter.js";
 import viewsRouter from "./routes/viewsRouter.js";
 import __dirname from "./utils.js";
 const app = express();
-const port = 8080;
+const PORT = process.env.PORT || 8080;
 
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`)); /* static content */
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
-const serverExpress = app.listen(port, () => {
-  console.log(`server running and listening in port ${port}`);
+const serverExpress = app.listen(PORT, () => {
+  console.log(`server running and listening in port ${PORT}`);
 });
 const io = new Server(serverExpress);
 io.on("connection", (socket) => {

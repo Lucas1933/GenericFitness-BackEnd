@@ -9,6 +9,7 @@ const checkIfActive = (status) => {
     return "inactive";
   }
 };
+
 socket.on("updateProducts", (products) => {
   containerOfDivs.innerHTML = " ";
   products.forEach((eachProduct) => {

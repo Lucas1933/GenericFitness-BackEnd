@@ -2,22 +2,23 @@ import * as fs from "fs";
 export default class ProductManager {
   constructor(path) {
     this.path = path;
-    this.products = this.setArrayProducts();
+    this.products = this.#setArrayProducts();
   }
-  setArrayProducts() {
-    let products = [];
-    if (fs.existsSync(this.path)) {
-      products = JSON.parse(fs.readFileSync(this.path, "utf-8"));
-    } else {
-      fs.writeFileSync(this.path, JSON.stringify(products));
-    }
-    return products;
-  }
-  saveProducts() {
-    fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2));
-  }
-  addProduct(title, description, price, status, thumbnail, code, stock) {
+  #validateProductFields(
+    title,
+    description,
+    price,
+    status,
+    thumbnail,
+    code,
+    stock
+  ) {
     try {
+      this.products.forEach((eachProduct) => {
+        if (Object.values(eachProduct).includes(code)) {
+          throw new Error(`The product with code ${code} already exists`);
+        }
+      });
       if (typeof title != "string") {
         throw new TypeError("title must be a string");
       }
@@ -41,11 +42,24 @@ export default class ProductManager {
       if (typeof stock != "number") {
         throw new TypeError("stock must be a number");
       }
-      this.products.forEach((eachProduct) => {
-        if (Object.values(eachProduct).includes(code)) {
-          throw new Error(`The product with code ${code} already exists`);
-        }
-      });
+    } catch (error) {
+      throw error;
+    }
+  }
+  #setArrayProducts() {
+    let products = [];
+    if (fs.existsSync(this.path)) {
+      products = JSON.parse(fs.readFileSync(this.path, "utf-8"));
+    } else {
+      fs.writeFileSync(this.path, JSON.stringify(products));
+    }
+    return products;
+  }
+  #saveProducts() {
+    fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2));
+  }
+  addProduct(title, description, price, thumbnail, code, stock) {
+    try {
       let product = new Product(
         title,
         description,
@@ -61,7 +75,7 @@ export default class ProductManager {
         product.id = this.products.length + 1;
       }
       this.products.push(product);
-      this.saveProducts();
+      this.#saveProducts();
       return true;
     } catch (error) {
       throw error;
@@ -140,7 +154,7 @@ export default class ProductManager {
       });
       let indexOfProductToBeUpdated = this.products.indexOf(productToBeUpdated);
       this.products[indexOfProductToBeUpdated] = productToBeUpdated;
-      this.saveProducts();
+      this.#saveProducts();
       return true;
     } catch (error) {
       throw error;
@@ -154,7 +168,7 @@ export default class ProductManager {
       }
       let indexOfProductToBeDeleted = this.products.indexOf(productToBeDeleted);
       this.products.splice(indexOfProductToBeDeleted, 1);
-      this.saveProducts();
+      this.#saveProducts();
       return true;
     } catch (error) {
       console.log(error);

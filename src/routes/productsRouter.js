@@ -38,19 +38,17 @@ productsRouter.get("/:productId", (req, res) => {
 productsRouter.post("/", (req, res) => {
   try {
     const io = req.app.get("socketio");
-    const { title, description, price, status, thumbnail, code, stock, id } =
-      req.body;
+    const { title, description, price, thumbnail, code, stock, id } = req.body;
     if (id) {
       return res.status(400).send({ error: "id's can't be added" });
     }
     let result = pm.addProduct(
       title,
       description,
-      price,
-      status,
+      parseInt(price),
       thumbnail,
       code,
-      stock
+      parseInt(stock)
     );
     if (result) {
       io.emit("updateProducts", pm.getProducts());
