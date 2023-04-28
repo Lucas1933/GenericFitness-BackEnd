@@ -4,21 +4,12 @@ export default class ProductManager {
     this.path = path;
     this.products = this.#setArrayProducts();
   }
-  #validateProductFields(
-    title,
-    description,
-    price,
-    status,
-    thumbnail,
-    code,
-    stock
-  ) {
+  #validateProductFields(product) {
     try {
-      this.products.forEach((eachProduct) => {
-        if (Object.values(eachProduct).includes(code)) {
-          throw new Error(`The product with code ${code} already exists`);
-        }
-      });
+      const { title, description, price, thumbnail, code, stock } = product;
+      if (this.validateCode(code)) {
+        throw new Error(`The product with code ${code} already exists`);
+      }
       if (typeof title != "string") {
         throw new TypeError("title must be a string");
       }
@@ -27,11 +18,6 @@ export default class ProductManager {
       }
       if (typeof price != "number") {
         throw new TypeError("price must be a number");
-      }
-      if (status) {
-        if (typeof status != "boolean") {
-          throw new TypeError("status must be a boolean");
-        }
       }
       if (!Array.isArray(thumbnail)) {
         throw new TypeError("thumbnail must be an array");
@@ -42,6 +28,16 @@ export default class ProductManager {
       if (typeof stock != "number") {
         throw new TypeError("stock must be a number");
       }
+
+      return new Product(
+        title,
+        description,
+        price,
+        true,
+        thumbnail,
+        code,
+        stock
+      );
     } catch (error) {
       throw error;
     }
@@ -58,23 +54,15 @@ export default class ProductManager {
   #saveProducts() {
     fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2));
   }
-  addProduct(title, description, price, thumbnail, code, stock) {
+  addProduct(recivedProduct) {
     try {
-      let product = new Product(
-        title,
-        description,
-        price,
-        true,
-        thumbnail,
-        code,
-        stock
-      );
+      const validatedProduct = this.#validateProductFields(recivedProduct);
       if (this.products.length == 0) {
-        product.id = 1;
+        validatedProduct.id = 1;
       } else {
-        product.id = this.products.length + 1;
+        validatedProduct.id = this.products.length + 1;
       }
-      this.products.push(product);
+      this.products.push(validatedProduct);
       this.#saveProducts();
       return true;
     } catch (error) {
@@ -86,10 +74,8 @@ export default class ProductManager {
   }
   getProductById(id) {
     try {
-      const parsedId = parseInt(id);
       let product =
-        this.products.find((eachProduct) => eachProduct.id === parsedId) ||
-        null;
+        this.products.find((eachProduct) => eachProduct.id === id) || null;
       return product;
     } catch (error) {
       console.log(error);
@@ -174,6 +160,16 @@ export default class ProductManager {
       console.log(error);
       return false;
     }
+  }
+  validateCode(code) {
+    let result = false;
+    this.products.forEach((eachProduct) => {
+      if (Object.values(eachProduct).includes(code)) {
+        result = true;
+        return;
+      }
+    });
+    return result;
   }
 }
 class Product {
