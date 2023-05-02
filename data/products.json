@@ -4,10 +4,7 @@
     "description": "max muscle gain for your low-self esteem",
     "price": 1933,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-123",
     "stock": 10000,
     "id": 1
@@ -17,10 +14,7 @@
     "description": "This is a legal suplement, they are not steroids",
     "price": 800,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-124",
     "stock": 5254,
     "id": 2
@@ -30,10 +24,7 @@
     "description": "You read it! just powder, but of the best kind",
     "price": 3391,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-125",
     "stock": 8489,
     "id": 3
@@ -43,10 +34,7 @@
     "description": "Of the same joke",
     "price": 189,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-126",
     "stock": 100000000,
     "id": 4
@@ -56,10 +44,7 @@
     "description": "Its plain caffeine but marketing didnt like the honesty",
     "price": 3197,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-127",
     "stock": 1,
     "id": 5
@@ -69,10 +54,7 @@
     "description": "As generic as it gets",
     "price": 19,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-128",
     "stock": 10000,
     "id": 6
@@ -82,10 +64,7 @@
     "description": "Surely is not the same as the one before",
     "price": 3365,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-129",
     "stock": 10000,
     "id": 7
@@ -95,10 +74,7 @@
     "description": "A bowl full of egg yolks",
     "price": 1933,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-130",
     "stock": 10000,
     "id": 8
@@ -108,10 +84,7 @@
     "description": "the best one",
     "price": 1933,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-131",
     "stock": 10000,
     "id": 9
@@ -121,202 +94,9 @@
     "description": "because is the last one of the file",
     "price": 1933,
     "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
+    "thumbnail": ["first image", "second image"],
     "code": "p-132",
     "stock": 10000,
     "id": 10
-  },
-  {
-    "title": "updatesd",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
-    "code": "p-13sssssdasd2",
-    "stock": 10000,
-    "id": 11
-  },
-  {
-    "title": "5",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
-    "code": "p-13sssasdasdssssaaaa2",
-    "stock": 10000,
-    "id": 13
-  },
-  {
-    "title": "5000",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
-    "code": "p-1888",
-    "stock": 10000,
-    "id": 14
-  },
-  {
-    "title": "5000",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
-    "code": "p-100888",
-    "stock": 10000,
-    "id": 15
-  },
-  {
-    "title": "5000",
-    "description": "because is the last one of the file",
-    "price": 19,
-    "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
-    "code": "p-1000888",
-    "stock": 10000,
-    "id": 16
-  },
-  {
-    "title": "5000",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
-    "code": "p-100088888",
-    "stock": 10000,
-    "id": 17
-  },
-  {
-    "title": "5000",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [],
-    "code": "p-1000888asdads88",
-    "stock": 10000,
-    "id": 18
-  },
-  {
-    "title": "5000",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "asds",
-      232
-    ],
-    "code": "p-1000888asdadddds88",
-    "stock": 10000,
-    "id": 19
-  },
-  {
-    "title": "\"added torugh form\"",
-    "description": "\"description\"",
-    "price": 50,
-    "status": true,
-    "thumbnail": [
-      "\"uno",
-      "dos\""
-    ],
-    "code": "\"asdas5465465\"",
-    "stock": 80,
-    "id": 21
-  },
-  {
-    "title": "\"added torugh form\"",
-    "description": "\"description\"",
-    "price": 50,
-    "status": true,
-    "thumbnail": [
-      "\"uno",
-      "dos\""
-    ],
-    "code": "asdas5465465",
-    "stock": 80,
-    "id": 22
-  },
-  {
-    "title": "added torugh form",
-    "description": "description",
-    "price": 50,
-    "status": true,
-    "thumbnail": [
-      "uno",
-      "dos"
-    ],
-    "code": "asdas54654654",
-    "stock": 80,
-    "id": 23
-  },
-  {
-    "title": "added torugh form",
-    "description": "description",
-    "price": 50,
-    "status": true,
-    "thumbnail": [
-      "unoasdasdasd"
-    ],
-    "code": "asdas54654654sdassss",
-    "stock": 80,
-    "id": 24
-  },
-  {
-    "title": "added torugh form",
-    "description": "description",
-    "price": 50,
-    "status": true,
-    "thumbnail": [
-      "asdasd.asd.asd"
-    ],
-    "code": "asdas54654654sdasssssss",
-    "stock": 80,
-    "id": 25
-  },
-  {
-    "title": "added torugh form",
-    "description": "description",
-    "price": 50,
-    "status": true,
-    "thumbnail": [
-      "asdasd.asd.asd",
-      "asd"
-    ],
-    "code": "asdas54654654sdasssssssss",
-    "stock": 80,
-    "id": 26
-  },
-  {
-    "title": "updatesd",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
-    "code": "new code",
-    "stock": 10000,
-    "id": 27
   }
 ]
