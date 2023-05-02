@@ -130,7 +130,7 @@
     "id": 10
   },
   {
-    "title": "5",
+    "title": "updatesd",
     "description": "because is the last one of the file",
     "price": 1933,
     "status": true,
@@ -138,22 +138,9 @@
       "first image",
       "second image"
     ],
-    "code": "p-13sssssaaaa2",
+    "code": "p-13sssssdasd2",
     "stock": 10000,
     "id": 11
-  },
-  {
-    "title": "5",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "first image",
-      "second image"
-    ],
-    "code": "p-13sssssssaaaa2",
-    "stock": 10000,
-    "id": 12
   },
   {
     "title": "5",
@@ -244,19 +231,6 @@
     "id": 19
   },
   {
-    "title": "5000",
-    "description": "because is the last one of the file",
-    "price": 1933,
-    "status": true,
-    "thumbnail": [
-      "asds",
-      232
-    ],
-    "code": "p-1000888asdadddddds88",
-    "stock": 10000,
-    "id": 20
-  },
-  {
     "title": "\"added torugh form\"",
     "description": "\"description\"",
     "price": 50,
@@ -331,5 +305,18 @@
     "code": "asdas54654654sdasssssssss",
     "stock": 80,
     "id": 26
+  },
+  {
+    "title": "updatesd",
+    "description": "because is the last one of the file",
+    "price": 1933,
+    "status": true,
+    "thumbnail": [
+      "first image",
+      "second image"
+    ],
+    "code": "new code",
+    "stock": 10000,
+    "id": 27
   }
 ]

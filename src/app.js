@@ -18,6 +18,9 @@ app.use(express.static(`${__dirname}/public`)); /* static content */
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter);
+app.use((err, req, res, next) => {
+  return res.status(res.errorCode || 500).send({ error: err.message });
+});
 const serverExpress = app.listen(PORT, () => {
   console.log(`server running and listening in port ${PORT}`);
 });

@@ -117,6 +117,10 @@ export default class ProductManager {
       if (fields["code"]) {
         if (typeof fields.code != "string") {
           throw new TypeError("code must be a string");
+        } else if (this.validateCode(fields["code"])) {
+          throw new Error(
+            `another product with the code ${fields["code"]} already exists`
+          );
         }
       }
       if (fields["stock"]) {
