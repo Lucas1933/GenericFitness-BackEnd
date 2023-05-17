@@ -10,6 +10,8 @@ const registerChatHandler = (io, socket) => {
 
   const newParticipant = async (user) => {
     socket.broadcast.emit("chat:newConnection", user);
+    const messageLogs = await mm.getMessages();
+    socket.emit("chat:messageLogs", messageLogs);
   };
 
   socket.on("chat:message", saveMessage);

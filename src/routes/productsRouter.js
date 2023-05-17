@@ -1,19 +1,7 @@
 import { Router } from "express";
-/* 
-uncomment for using with FS
-import path from "path"; */
 import __dirname from "../utils.js";
-/* 
-uncomment for using with FS
-import ProductManager from "../dao/fileSystem/managers/productManager.js"; */
 import ProductManager from "../dao/mongo/managers/productManager.js";
 
-/* 
-uncomment for using with FS
-const productsFilePath = path.join(
-  __dirname,
-  "./dao/fileSystem/data/products.json"
-); */
 const pm = new ProductManager();
 const productsRouter = Router();
 
@@ -72,15 +60,7 @@ const validateGet = (req, res, next) => {
         throw new Error("limit invalid");
       }
     }
-    /*     
-    uncomment for using with FS
-      if (req.params.productId != undefined) {
-      req.params.productId = parseInt(req.params.productId);
-      const product = pm.getProductById(req.params.productId);
-      if (product === null) {
-        throw new Error("invalid id");
-      }
-    } */
+
     next();
   } catch (error) {
     res.errorCode = 400;
@@ -89,7 +69,6 @@ const validateGet = (req, res, next) => {
 };
 const validatePut = async (req, res, next) => {
   try {
-    /* const productId = parseInt(req.params.productId); */
     const productId = req.params.productId;
     const { title, description, price, status, thumbnail, code, stock, id } =
       req.body;
@@ -102,10 +81,6 @@ const validatePut = async (req, res, next) => {
         throw new Error(`a product with the code ${code} already exists`);
       }
     }
-
-    /*  if (product === null) {
-      throw new Error("invalid id");
-    } */
 
     await pm.updateProduct(productId, {
       title: title,
@@ -124,15 +99,6 @@ const validatePut = async (req, res, next) => {
 };
 const validateDelete = (req, res, next) => {
   try {
-    /*     
-    uncomment to use with FS
-  const productId = parseInt(req.params.productId);
-    if (isNaN(productId)) {
-      throw new Error("id must be a number");
-    }
-    if (!pm.deleteProduct(productId)) {
-      throw new Error("something went wrong, check id");
-    } */
     next();
   } catch (error) {
     res.errorCode = 400;
@@ -185,8 +151,8 @@ productsRouter.put("/:productId", validatePut, (req, res) => {
 });
 productsRouter.delete("/:productId", validateDelete, async (req, res) => {
   try {
-    /*  const io = req.app.get("socketio");
-    io.emit("updateProducts", await pm.getProducts()); */
+    const io = req.app.get("socketio");
+    io.emit("updateProducts", await pm.getProducts());
 
     await pm.deleteProduct(req.params.productId);
     return res
