@@ -1,12 +1,23 @@
 import { Router } from "express";
-import path from "path";
+/* 
+uncomment for using with FS
+import path from "path"; */
 import __dirname from "../utils.js";
-import ProductManager from "../managers/productManager.js";
-const productsFilePath = path.join(__dirname, "../data/products.json");
-const pm = new ProductManager(productsFilePath);
+/* 
+uncomment for using with FS
+import ProductManager from "../dao/fileSystem/managers/productManager.js"; */
+import ProductManager from "../dao/mongo/managers/productManager.js";
+
+/* 
+uncomment for using with FS
+const productsFilePath = path.join(
+  __dirname,
+  "./dao/fileSystem/data/products.json"
+); */
+const pm = new ProductManager();
 const productsRouter = Router();
 
-const validatePost = (req, res, next) => {
+const validatePost = async (req, res, next) => {
   try {
     let { title, description, price, thumbnail, code, stock, id } = req.body;
     const contentType = req.get("Content-Type");
@@ -16,7 +27,7 @@ const validatePost = (req, res, next) => {
     if (typeof code != "string") {
       throw new TypeError("code must be a string");
     }
-    if (pm.validateCode(code)) {
+    if (await pm.validateCode(code)) {
       throw new Error(`The product of code ${code} already exists`);
     }
     if (isNaN(price)) {
@@ -61,32 +72,42 @@ const validateGet = (req, res, next) => {
         throw new Error("limit invalid");
       }
     }
-    if (req.params.productId != undefined) {
+    /*     
+    uncomment for using with FS
+      if (req.params.productId != undefined) {
       req.params.productId = parseInt(req.params.productId);
       const product = pm.getProductById(req.params.productId);
       if (product === null) {
         throw new Error("invalid id");
       }
-    }
+    } */
     next();
   } catch (error) {
     res.errorCode = 400;
     next(error);
   }
 };
-const validatePut = (req, res, next) => {
+const validatePut = async (req, res, next) => {
   try {
-    const productId = parseInt(req.params.productId);
+    /* const productId = parseInt(req.params.productId); */
+    const productId = req.params.productId;
     const { title, description, price, status, thumbnail, code, stock, id } =
       req.body;
+
     if (id) {
       throw new Error("id's can't be updated");
     }
-    const product = pm.getProductById(productId);
-    if (product === null) {
-      throw new Error("invalid id");
+    if (code) {
+      if (await pm.validateCode(code)) {
+        throw new Error(`a product with the code ${code} already exists`);
+      }
     }
-    pm.updateProduct(productId, {
+
+    /*  if (product === null) {
+      throw new Error("invalid id");
+    } */
+
+    await pm.updateProduct(productId, {
       title: title,
       description: description,
       price: price,
@@ -103,52 +124,55 @@ const validatePut = (req, res, next) => {
 };
 const validateDelete = (req, res, next) => {
   try {
-    const productId = parseInt(req.params.productId);
+    /*     
+    uncomment to use with FS
+  const productId = parseInt(req.params.productId);
     if (isNaN(productId)) {
       throw new Error("id must be a number");
     }
     if (!pm.deleteProduct(productId)) {
       throw new Error("something went wrong, check id");
-    }
+    } */
     next();
   } catch (error) {
     res.errorCode = 400;
     next(error);
   }
 };
-productsRouter.get("/", validateGet, (req, res) => {
+productsRouter.get("/", validateGet, async (req, res) => {
   try {
-    const products = pm.getProducts();
+    const products = await pm.getProducts();
     const requestedProducts = products.slice(0, req.query.limit);
-    return res.status(200).send(requestedProducts);
+    return res
+      .status(200)
+      .send({ status: "success", payload: requestedProducts });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: "internal server error" });
   }
 });
-productsRouter.get("/:productId", validateGet, (req, res) => {
-  try {
-    const product = pm.getProductById(req.params.productId);
-    return res.status(200).send(product);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ error: "internal server error" });
-  }
-});
-productsRouter.post("/", validatePost, (req, res) => {
+productsRouter.post("/", validatePost, async (req, res) => {
   try {
     const io = req.app.get("socketio");
     const product = req.product;
-    pm.addProduct(product);
-    io.emit("updateProducts", pm.getProducts());
-    return res
-      .status(200)
-      .send({ message: "Product added successfully", status: "success" });
+    await pm.addProduct(product);
+    io.emit("updateProducts", await pm.getProducts());
+    return res.sendStatus(201);
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: "Internal Server Error" });
   }
 });
+productsRouter.get("/:productId", validateGet, async (req, res) => {
+  try {
+    const product = await pm.getProductById(req.params.productId);
+    return res.status(200).send({ status: "success", payload: product });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "internal server error" });
+  }
+});
+
 productsRouter.put("/:productId", validatePut, (req, res) => {
   try {
     res
@@ -159,13 +183,15 @@ productsRouter.put("/:productId", validatePut, (req, res) => {
     return res.status(500).send({ error: "internal server error" });
   }
 });
-productsRouter.delete("/:productId", validateDelete, (req, res) => {
+productsRouter.delete("/:productId", validateDelete, async (req, res) => {
   try {
-    const io = req.app.get("socketio");
-    io.emit("updateProducts", pm.getProducts());
+    /*  const io = req.app.get("socketio");
+    io.emit("updateProducts", await pm.getProducts()); */
+
+    await pm.deleteProduct(req.params.productId);
     return res
       .status(200)
-      .send({ message: "Product deleted successfully", status: "success" });
+      .send({ status: "success", message: "Product deleted successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: "internal server error" });
