@@ -2,17 +2,8 @@ import { Router } from "express";
 import __dirname from "../utils.js";
 import CartManager from "../dao/mongo/managers/cartManager.js";
 import ProductManager from "../dao/mongo/managers/productManager.js";
-/* import path from "path";
-import CartManager from "../dao/fileSystem/managers/cartManager.js";
-import ProductManager from "../dao/fileSystem/managers/productManager.js"; */
 const cartsRouter = Router();
-/* const cartsFilePath = path.join(__dirname, "./dao/fileSystem/data/carts.json");
-const productsFilePath = path.join(
-  __dirname,
-  "./dao/fileSystem/data/products.json"
-); */
-/* const cm = new CartManager(cartsFilePath);
-const pm = new ProductManager(productsFilePath); */
+
 const cm = new CartManager();
 const pm = new ProductManager();
 /* for testing purposes */
