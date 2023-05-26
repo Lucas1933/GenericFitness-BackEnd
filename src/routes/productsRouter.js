@@ -109,12 +109,12 @@ productsRouter.get("/", validateGet, async (req, res) => {
   try {
     const products = await pm.getProducts();
     const requestedProducts = products.slice(0, req.query.limit);
-    return res
-      .status(200)
-      .send({ status: "success", payload: requestedProducts });
+    return res.status(200).send({ status: "200", payload: requestedProducts });
   } catch (error) {
     console.log(error);
-    return res.status(500).send({ error: "internal server error" });
+    return res
+      .status(500)
+      .send({ status: "500", error: "internal server error" });
   }
 });
 productsRouter.post("/", validatePost, async (req, res) => {
