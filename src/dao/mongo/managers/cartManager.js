@@ -7,20 +7,20 @@ export default class CartManager {
   async addProduct(cartId, productId) {
     const cart = await cartModel.findById(cartId).lean();
     const productIndex = cart.products.findIndex(
-      (eachProduct) => eachProduct.id == productId
+      (eachProduct) => eachProduct.product == productId
     );
     if (productIndex == -1) {
-      cart.products.push({ id: productId });
+      cart.products.push({ product: productId });
     } else {
       const quantity = cart.products[productIndex].quantity + 1;
-      cart.products[productIndex] = { id: productId, quantity: quantity };
+      cart.products[productIndex] = { product: productId, quantity: quantity };
     }
 
     return await cartModel.findByIdAndUpdate(cartId, { $set: cart });
   }
 
   getCart(id) {
-    return cartModel.findById(id).lean().populate();
+    return cartModel.findById(id).lean().populate("products.product");
   }
   deleteCart(id) {
     if (!id) return cartModel.deleteMany();
@@ -34,7 +34,7 @@ export default class CartManager {
   async deleteProduct(cartId, productId) {
     const cart = await cartModel.findById(cartId).lean();
     const productIndex = cart.products.findIndex(
-      (eachProduct) => eachProduct.id == productId
+      (eachProduct) => eachProduct.product == productId
     );
     cart.products.splice(productIndex, 1);
     return await cartModel.findByIdAndUpdate(cartId, { $set: cart });
@@ -52,7 +52,7 @@ export default class CartManager {
   async updateProduct(cartId, productId, newQuantity) {
     const cart = await cartModel.findById(cartId).lean();
     const productIndex = cart.products.findIndex(
-      (eachProduct) => eachProduct.id == productId
+      (eachProduct) => eachProduct.product == productId
     );
     if (productIndex != -1) {
       cart.products[productIndex].quantity = newQuantity;
