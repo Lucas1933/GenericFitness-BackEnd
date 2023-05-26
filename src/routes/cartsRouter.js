@@ -13,10 +13,10 @@ cartsRouter.get("/", async (req, res) => {
 });
 cartsRouter.post("/", async (req, res) => {
   try {
-    await cm.createCart();
+    const result = await cm.createCart();
     res
-      .status(200)
-      .send({ message: "cart created sucessfully", status: "success" });
+      .status(201)
+      .send({ message: "cart created sucessfully", status: "201" });
   } catch (error) {
     console.log(error);
     return res.status(400).send({ error: error.message });
@@ -26,13 +26,10 @@ cartsRouter.post("/:cartId/product/:productId", async (req, res) => {
   try {
     const cartId = req.params.cartId;
     const productId = req.params.productId;
-    const product = await pm.getProductById(productId);
-    if (!product) {
-      throw new Error(`the product with id ${productId} does not exists`);
-    }
+
     await cm.addProduct(cartId, productId);
     return res.status(200).send({
-      status: "success",
+      status: "200",
       message: "product added to the cart successfully",
     });
   } catch (error) {
@@ -43,12 +40,15 @@ cartsRouter.post("/:cartId/product/:productId", async (req, res) => {
 cartsRouter.get("/:cartId", async (req, res) => {
   try {
     const cart = await cm.getCart(req.params.cartId);
-
-    res.status(200).send({ status: "success", payload: cart.products });
+    res.status(200).send({ status: "200", payload: cart.products });
   } catch (error) {
     console.log(error);
     return res.status(400).send({ error: error.message });
   }
 });
-
+/* for testing purposes */
+cartsRouter.delete("/", async (req, res) => {
+  const carts = await cm.deleteCart(req.query.cartId);
+  res.send(`cart with id ${req.query.cartId} was deleted`);
+});
 export default cartsRouter;
