@@ -6,7 +6,7 @@ const cartsRouter = Router();
 
 const cm = new CartManager();
 const pm = new ProductManager();
-/* for testing purposes */
+/* for testing purposes, it does not populate */
 cartsRouter.get("/", async (req, res) => {
   const carts = await cm.getAllCarts();
   res.send(carts);
@@ -23,13 +23,11 @@ cartsRouter.get("/:cartId", async (req, res) => {
 cartsRouter.post("/", async (req, res) => {
   try {
     const result = await cm.createCart();
-    res
-      .status(201)
-      .send({
-        message: "cart created sucessfully",
-        status: "201",
-        payload: result,
-      });
+    res.status(201).send({
+      message: "cart created sucessfully",
+      status: "201",
+      payload: result,
+    });
   } catch (error) {
     console.log(error);
     return res.status(400).send({ error: error.message });
