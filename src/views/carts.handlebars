@@ -1,0 +1,46 @@
+<div><h1>Cart: {{id}}</h1>
+  <button id="emptyCart">Vaciar carrito</button>
+</div>
+
+<div
+  id="containerOfProducts"
+  style="display: grid; grid-template-columns: 1fr 1fr;"
+>
+  {{#each products}}
+    <div style="width: fit-content;">
+      <ul style="font-size: 22px; padding-left: 20px;">
+        <li>
+          <span style="text-decoration: underline;">Name:</span>
+          {{this.product.title}}</li>
+        <li><span style="text-decoration: underline;">Description:</span>
+          {{this.product.description}}</li>
+        <li>
+          <span
+            style="text-decoration: underline;"
+          >Price:</span>{{this.product.price}}</li>
+        <li><span style="text-decoration: underline;">Status:</span>
+          {{#if this.product.status}}
+            active
+          {{else}}
+            inactive
+          {{/if}}</li>
+        <li><span style="text-decoration: underline;">Thumbnails:</span>
+          {{this.product.thumbnail}}</li>
+        <li>
+          <span style="text-decoration: underline;">Code:</span>
+          {{this.product.code}}</li>
+        <li>
+          <span style="text-decoration: underline;">Stock:</span>
+          {{this.product.stock}}</li>
+        <li>
+          <span style="text-decoration: underline;">ID:</span>
+          {{this.product._id}}</li>
+        <li>
+          <span style="text-decoration: underline;">Quantity:</span>
+          {{this.quantity}}</li>
+      </ul>
+    </div>
+  {{/each}}
+</div>
+
+<script src="/js/cart.js"></script>

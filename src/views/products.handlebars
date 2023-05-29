@@ -29,11 +29,9 @@
           <li>
             <span style="text-decoration: underline;">Stock:</span>
             {{this.stock}}</li>
-          <li>
-            <span style="text-decoration: underline;">ID:</span>
-            {{this.id}}</li>
-        </ul>
 
+        </ul>
+        <button class="addToCartBtn" value={{this.id}}>Agregar al carrito</button>
       </div>
     {{/each}}
   </div>
@@ -73,6 +71,12 @@
         <a href="" value="sort=asc"><button>Menor precio</button></a>
         <a href="" value="sort=desc"><button>Mayor precio</button></a>
       </div>
+      <div id="cartContainer">
+        <p>Carrito: <p id="itemQuantity">0</p></p>
+        <a href="" id="checkCart" target="_blank"><button>Ver carrito</button></a>
+
+      </div>
+      <div><button id="clearStorageBtn">CLEAR STORAGE</button></div>
     </div>
   </div>
 

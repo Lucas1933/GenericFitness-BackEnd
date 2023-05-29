@@ -1,5 +1,4 @@
 import cartModel from "../models/cartModel.js";
-import productModel from "../models/productModel.js";
 export default class CartManager {
   createCart() {
     return cartModel.create(undefined);
@@ -20,7 +19,7 @@ export default class CartManager {
   }
 
   getCart(id) {
-    return cartModel.findById(id).lean().populate("products.product");
+    return cartModel.findById(id).lean().populate("products.product").lean();
   }
   deleteCart(id) {
     if (!id) return cartModel.deleteMany();
@@ -45,6 +44,7 @@ export default class CartManager {
     return await cartModel.findByIdAndUpdate(cartId, { $set: cart });
   }
   async fillCart(cartId, products) {
+    console.log(cartId);
     const cart = await cartModel.findById(cartId).lean();
     cart.products = products;
     return await cartModel.findByIdAndUpdate(cartId, { $set: cart });

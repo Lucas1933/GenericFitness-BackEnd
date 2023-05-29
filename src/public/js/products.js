@@ -4,7 +4,31 @@ const limitBtns = Array.from(
 const sortingBtns = Array.from(
   document.getElementById("sortingContainer").children
 );
+const addToCartBtns = Array.from(
+  document.getElementsByClassName("addToCartBtn")
+);
 
+const checkCartBtn = document.getElementById("checkCart");
+const cartQuantity = document.getElementById("itemQuantity");
+
+const clearStorageBtn = document.getElementById("clearStorageBtn");
+let itemCounter = 0;
+let cart;
+
+if (!localStorage.getItem("cart")) {
+  cart = { products: [] };
+  localStorage.setItem("cart", JSON.stringify(cart));
+  console.log(localStorage.getItem("cart"));
+} else {
+  cart = JSON.parse(localStorage.getItem("cart"));
+  cart.products.forEach((eachProduct) => {
+    itemCounter += eachProduct.quantity;
+  });
+
+  cartQuantity.innerHTML = itemCounter;
+}
+
+console.log(cart);
 limitBtns.forEach((eachBtn) => {
   eachBtn.addEventListener("click", (event) => {
     if (window.location.search.length == 0) {
@@ -39,4 +63,51 @@ sortingBtns.forEach((eachBtn) => {
       eachBtn.setAttribute("href", newSortingLink);
     }
   });
+});
+
+addToCartBtns.forEach((eachBtn) => {
+  eachBtn.addEventListener("click", (event) => {
+    const productId = eachBtn.getAttribute("value");
+    const productExists = cart.products.find(
+      (eachProduct) => eachProduct.product === productId
+    );
+    if (!productExists) {
+      cart.products.push({ product: productId, quantity: 1 });
+      cartQuantity.innerHTML = ++itemCounter;
+    } else {
+      const productIndex = cart.products.findIndex(
+        (eachProduct) => eachProduct === productExists
+      );
+      cart.products[productIndex].quantity++;
+      cartQuantity.innerHTML = ++itemCounter;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+  });
+});
+
+checkCartBtn.addEventListener("click", async (event) => {
+  event.preventDefault();
+  let result = await fetch("/api/carts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const parsedResult = await result.json();
+  const cartId = parsedResult.payload._id;
+  console.log(cartId);
+  result = await fetch(`/api/carts/${cartId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(cart.products),
+  });
+  checkCartBtn.setAttribute("href", `/carts/${cartId}`);
+  localStorage.setItem("cartId", cartId);
+  window.open(`/carts/${cartId}`, "_blank");
+});
+
+clearStorageBtn.addEventListener("click", (event) => {
+  localStorage.clear();
 });

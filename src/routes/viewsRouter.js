@@ -1,8 +1,10 @@
 import { Router } from "express";
 import ProductManager from "../dao/mongo/managers/productManager.js";
+import CartManager from "../dao/mongo/managers/cartManager.js";
 import __dirname from "../utils.js";
 
 const pm = new ProductManager();
+const cm = new CartManager();
 const viewsRouter = Router();
 
 viewsRouter.get("/products", async (req, res) => {
@@ -35,6 +37,11 @@ viewsRouter.get("/products", async (req, res) => {
     prevLink,
     nextLink,
   });
+});
+
+viewsRouter.get("/carts/:cartId", async (req, res) => {
+  const cart = await cm.getCart(req.params.cartId);
+  res.render("carts", { products: cart.products, id: req.params.cartId });
 });
 viewsRouter.get("/", (req, res) => {
   const products = pm.getProducts();
