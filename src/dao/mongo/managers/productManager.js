@@ -1,7 +1,13 @@
 import productModel from "../models/productModel.js";
 export default class ProductManager {
-  getProducts() {
-    return productModel.find().lean();
+  getProducts(queryLimit, queryPage, querySort) {
+    const options = {
+      limit: queryLimit,
+      page: queryPage,
+      lean: true,
+    };
+    querySort != 0 ? (options.sort = { price: querySort }) : null;
+    return productModel.paginate({}, options);
   }
 
   getProductById(id) {
