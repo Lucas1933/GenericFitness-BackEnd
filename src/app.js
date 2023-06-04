@@ -1,10 +1,14 @@
 import express from "express";
-import { Server } from "socket.io";
+import session from "express-session";
 import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
+import { Server } from "socket.io";
+
 import handlebars from "express-handlebars";
 
 import productsRouter from "./routes/productsRouter.js";
 import cartsRouter from "./routes/cartsRouter.js";
+import sessionsRouter from "./routes/sessionsRouter.js";
 import viewsRouter from "./routes/viewsRouter.js";
 import registerChatHandler from "./listeners/chatHanlder.js";
 
@@ -26,8 +30,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`)); /* static content */
 
+app.use(
+  session({
+    store: new MongoStore({
+      mongoUrl:
+        "mongodb+srv://lucas1933:1234@clusterpk.ghi4uir.mongodb.net/GenericFitness?retryWrites=true&w=majority",
+      ttl: 3600,
+    }),
+    secret: "signedCookie",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/sessions", sessionsRouter);
 app.use("/", viewsRouter);
 
 app.use((err, req, res, next) => {

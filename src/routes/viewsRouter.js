@@ -12,6 +12,7 @@ viewsRouter.get("/products", async (req, res) => {
   const queryPage = req.query.page || 1;
   const querySort =
     req.query.sort == "asc" ? 1 : req.query.sort == "desc" ? -1 : 0;
+
   const {
     docs,
     totalDocs,
@@ -27,6 +28,7 @@ viewsRouter.get("/products", async (req, res) => {
   } = await pm.getProducts(queryLimit, queryPage, querySort);
   const prevLink = `/products?limit=${queryLimit}&page=${prevPage}&sort=${req.query.sort}`;
   const nextLink = `/products?limit=${queryLimit}&page=${nextPage}&sort=${req.query.sort}`;
+
   res.render("products", {
     products: docs,
     page,
@@ -36,6 +38,8 @@ viewsRouter.get("/products", async (req, res) => {
     nextPage,
     prevLink,
     nextLink,
+    userName: req.session.name,
+    userSessionId: req.sessionID,
   });
 });
 
@@ -44,8 +48,10 @@ viewsRouter.get("/carts/:cartId", async (req, res) => {
   res.render("carts", { products: cart.products, id: req.params.cartId });
 });
 viewsRouter.get("/", (req, res) => {
-  const products = pm.getProducts();
-  res.render("index", { products: products });
+  res.render("login");
+});
+viewsRouter.get("/register", (req, res) => {
+  res.render("register");
 });
 
 viewsRouter.get("/realtimeproducts", (req, res) => {

@@ -10,6 +10,7 @@ const addToCartBtns = Array.from(
 
 const checkCartBtn = document.getElementById("checkCart");
 const cartQuantity = document.getElementById("itemQuantity");
+const logoutBtn = document.getElementById("logoutBtn");
 
 const clearStorageBtn = document.getElementById("clearStorageBtn");
 let itemCounter = 0;
@@ -28,7 +29,6 @@ if (!localStorage.getItem("cart")) {
   cartQuantity.innerHTML = itemCounter;
 }
 
-console.log(cart);
 limitBtns.forEach((eachBtn) => {
   eachBtn.addEventListener("click", (event) => {
     if (window.location.search.length == 0) {
@@ -111,3 +111,21 @@ checkCartBtn.addEventListener("click", async (event) => {
 clearStorageBtn.addEventListener("click", (event) => {
   localStorage.clear();
 });
+
+logoutBtn.addEventListener("click", async (event) => {
+  const result = await fetch(`/sessions/userSession`, {
+    method: "DELETE",
+  });
+
+  window.location.replace("/");
+});
+async function checkSession() {
+  const result = await fetch(`/sessions/check-session`, {
+    method: "GET",
+  });
+  const parsedResult = await result.json();
+  if (parsedResult.isSessionExpired) {
+    window.location.replace("/");
+  }
+}
+checkSession();
