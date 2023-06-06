@@ -36,10 +36,11 @@ const passportInit = () => {
       { usernameField: "email" },
       async (email, password, done) => {
         try {
-          if (email == "admin" && password == "admin") {
+          if (email == "admin@correo.com" && password == "admin") {
             const admin = {
               role: "admin",
               firstName: "admin",
+              id: 0,
             };
             return done(null, admin);
           }

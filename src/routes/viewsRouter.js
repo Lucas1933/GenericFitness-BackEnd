@@ -40,6 +40,7 @@ viewsRouter.get("/products", async (req, res) => {
     prevLink,
     nextLink,
     userName: req.session.user.name,
+    userRole: req.session.user.role,
     userSessionId: req.sessionID,
   });
 });
