@@ -1,7 +1,7 @@
 import passport from "passport";
 import local from "passport-local";
 import userModel from "../dao/mongo/models/userModel.js";
-
+import bcrypt from "bcrypt";
 const LocalStrategy = local.Strategy;
 const passportInit = () => {
   passport.use(
@@ -10,18 +10,21 @@ const passportInit = () => {
       { usernameField: "email", passReqToCallback: true },
       async (req, email, password, done) => {
         try {
-          const { first_name, last_name } = req.body;
+          const { firstName, lastName } = req.body;
           const existingUser = await userModel.findOne({ email });
           if (existingUser) {
             return done(null, false, { message: "el usuario ya existe" });
           } else {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
             const user = {
-              firstName: first_name,
-              lastName: last_name,
-              email: email,
-              password,
+              firstName,
+              lastName,
+              email,
+              password: hashedPassword,
             };
             const result = await userModel.create(user);
+
             return done(null, result);
           }
         } catch (error) {
@@ -45,10 +48,20 @@ const passportInit = () => {
             return done(null, admin);
           }
           const existingUser = await userModel.findOne({ email });
-          if (existingUser.password === password) {
-            return done(null, existingUser, { message: "user authorizated" });
-          } else {
+          if (!existingUser) {
             return done(null, false, { message: "user credentials incorrect" });
+          } else {
+            const result = await bcrypt.compare(
+              password,
+              existingUser.password
+            );
+            if (result) {
+              return done(null, existingUser);
+            } else {
+              return done(null, false, {
+                message: "user credentials incorrect",
+              });
+            }
           }
         } catch (error) {
           console.log(error);

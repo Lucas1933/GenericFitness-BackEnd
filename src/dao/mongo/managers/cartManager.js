@@ -44,7 +44,6 @@ export default class CartManager {
     return await cartModel.findByIdAndUpdate(cartId, { $set: cart });
   }
   async fillCart(cartId, products) {
-    console.log(cartId);
     const cart = await cartModel.findById(cartId).lean();
     cart.products = products;
     return await cartModel.findByIdAndUpdate(cartId, { $set: cart });

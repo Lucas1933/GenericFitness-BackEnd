@@ -17,7 +17,7 @@ sessionsRouter.post(
       };
       res.status(200).send({
         status: "sucess",
-        message: "user registered correctly",
+        message: "user validated correctly",
         redirection: "/products",
       });
     } catch (error) {
@@ -37,6 +37,12 @@ sessionsRouter.post(
     failureRedirect: "/api/sessions/registerFail",
   }),
   async (req, res) => {
+    req.session.user = {
+      name: req.user.firstName,
+      role: req.user.role,
+      id: req.user.id,
+      email: req.user.email,
+    };
     res.status(201).send({
       status: "sucess",
       message: "user registered correctly",

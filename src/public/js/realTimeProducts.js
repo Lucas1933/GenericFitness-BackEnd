@@ -1,4 +1,3 @@
-console.log("connected to the router");
 const socket = io();
 let containerOfDivs = document.getElementById("containerOfProducts");
 const deleteButton = document.getElementById("deleteButton");

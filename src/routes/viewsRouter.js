@@ -28,8 +28,7 @@ viewsRouter.get("/products", async (req, res) => {
   } = await pm.getProducts(queryLimit, queryPage, querySort);
   const prevLink = `/products?limit=${queryLimit}&page=${prevPage}&sort=${req.query.sort}`;
   const nextLink = `/products?limit=${queryLimit}&page=${nextPage}&sort=${req.query.sort}`;
-  console.log(req.session);
-  console.log(req.sessionID);
+  console.log(req.session.user);
   res.render("products", {
     products: docs,
     page,

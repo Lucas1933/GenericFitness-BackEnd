@@ -19,7 +19,6 @@ let cart;
 if (!localStorage.getItem("cart")) {
   cart = { products: [] };
   localStorage.setItem("cart", JSON.stringify(cart));
-  console.log(localStorage.getItem("cart"));
 } else {
   cart = JSON.parse(localStorage.getItem("cart"));
   cart.products.forEach((eachProduct) => {

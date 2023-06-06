@@ -19,7 +19,6 @@ form.addEventListener("submit", async (event) => {
     user[eachKey] = data.get(eachKey);
   }
   const parsedUser = JSON.stringify(user);
-  console.log(parsedUser);
   try {
     const response = await fetch(`api/sessions/login`, {
       method: "POST",

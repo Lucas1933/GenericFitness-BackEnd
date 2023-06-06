@@ -129,7 +129,6 @@ export default class ProductManager {
         }
       }
       Object.keys(fields).forEach((eachFieldsKey) => {
-        console.log(eachFieldsKey);
         if (!(eachFieldsKey in productToBeUpdated)) {
           throw new Error(`the property ${eachFieldsKey} is invalid`);
         }
