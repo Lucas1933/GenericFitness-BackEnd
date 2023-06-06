@@ -3,7 +3,7 @@ import session from "express-session";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
 import { Server } from "socket.io";
-
+import passport from "passport";
 import handlebars from "express-handlebars";
 
 import productsRouter from "./routes/productsRouter.js";
@@ -11,6 +11,7 @@ import cartsRouter from "./routes/cartsRouter.js";
 import sessionsRouter from "./routes/sessionsRouter.js";
 import viewsRouter from "./routes/viewsRouter.js";
 import registerChatHandler from "./listeners/chatHanlder.js";
+import passportInit from "./config/passport.js";
 
 import __dirname from "./utils.js";
 const app = express();
@@ -43,9 +44,12 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+
+passportInit();
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/sessions", sessionsRouter);
+app.use("/api/sessions", sessionsRouter);
 app.use("/", viewsRouter);
 
 app.use((err, req, res, next) => {

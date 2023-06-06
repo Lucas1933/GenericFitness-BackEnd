@@ -113,14 +113,14 @@ clearStorageBtn.addEventListener("click", (event) => {
 });
 
 logoutBtn.addEventListener("click", async (event) => {
-  const result = await fetch(`/sessions/userSession`, {
+  const result = await fetch(`api/sessions/user-session`, {
     method: "DELETE",
   });
 
   window.location.replace("/");
 });
 async function checkSession() {
-  const result = await fetch(`/sessions/check-session`, {
+  const result = await fetch(`api/sessions/check-session`, {
     method: "GET",
   });
   const parsedResult = await result.json();

@@ -1,40 +1,14 @@
 import { Router } from "express";
-import userModel from "../dao/mongo/models/userModel.js";
-
+import UserManager from "../dao/mongo/managers/userManager.js";
+import passport from "passport";
 const sessionsRouter = Router();
-
-sessionsRouter.get("/login/:email/:password", async (req, res) => {
-  const userExists = await userModel
-    .findOne({ email: req.params.email })
-    .lean();
-  const isUserValid = userExists
-    ? req.params.password === userExists.password
-    : false;
-  if (isUserValid) {
-    req.session.name = userExists.firstName;
-  }
-  return res.send({
-    status: 200,
-    message: isUserValid ? "user valid" : "Password or email are invalid",
-    payload: { userIsValid: isUserValid },
-  });
-});
-sessionsRouter.post("/register", async (req, res) => {
-  try {
-    const { firstName, lastName, email, password } = req.body;
-    await userModel.create({ firstName, lastName, email, password });
-    res.status(200).send({ message: "registration complete" });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-sessionsRouter.get("/userSession", async (req, res) => {
+const um = new UserManager();
+sessionsRouter.get("/user-session", async (req, res) => {
   const sessionId = req.sessionID;
   res.send({ payload: { sessionId: sessionId } });
 });
 
-sessionsRouter.delete("/userSession", async (req, res) => {
+sessionsRouter.delete("/user-session", async (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.log("Error destroying session:", err);
@@ -57,4 +31,53 @@ sessionsRouter.get("/check-session", (req, res) => {
     }
   });
 });
+
+sessionsRouter.post(
+  "/register",
+  passport.authenticate("register", {
+    failureRedirect: "/api/sessions/registerFail",
+  }),
+  async (req, res) => {
+    res.status(201).send({
+      status: "sucess",
+      message: "user registered correctly",
+      redirection: "/",
+    });
+  }
+);
+sessionsRouter.get("/registerFail", (req, res) => {
+  res
+    .status(400)
+    .send({ status: "error", error: "El correo ya se encuenta registrado" });
+});
+
+sessionsRouter.post(
+  "/login",
+  passport.authenticate("login", {
+    failureRedirect: "/api/sessions/loginFail",
+  }),
+  (req, res) => {
+    try {
+      req.session.user = {
+        name: req.user.firstName,
+        role: req.user.role,
+        id: req.user.id,
+        email: req.user.email,
+      };
+      res.status(200).send({
+        status: "sucess",
+        message: "user registered correctly",
+        redirection: "/products",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+sessionsRouter.get("/loginFail", (req, res) => {
+  res
+    .status(401)
+    .send({ status: "error", error: "Correo u contraseña incorrectos" });
+});
+
 export default sessionsRouter;
