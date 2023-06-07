@@ -50,6 +50,24 @@ sessionsRouter.post(
     });
   }
 );
+sessionsRouter.get(
+  "/githubcallbackAuth",
+  passport.authenticate("github"),
+  (req, res) => {}
+);
+sessionsRouter.get(
+  "/githubcallback",
+  passport.authenticate("github"),
+  (req, res) => {
+    req.session.user = {
+      name: req.user.firstName,
+      role: req.user.role,
+      id: req.user.id,
+      email: req.user.email,
+    };
+    res.status(200).redirect("/");
+  }
+);
 sessionsRouter.get("/registerFail", (req, res) => {
   res
     .status(400)

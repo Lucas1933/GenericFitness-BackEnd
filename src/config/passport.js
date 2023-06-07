@@ -2,7 +2,9 @@ import passport from "passport";
 import local from "passport-local";
 import userModel from "../dao/mongo/models/userModel.js";
 import bcrypt from "bcrypt";
+import gitHub from "passport-github2";
 const LocalStrategy = local.Strategy;
+const GitHubStrategy = gitHub.Strategy;
 const passportInit = () => {
   passport.use(
     "register",
@@ -66,6 +68,34 @@ const passportInit = () => {
         } catch (error) {
           console.log(error);
         }
+      }
+    )
+  );
+  passport.use(
+    "github",
+    new GitHubStrategy(
+      {
+        clientID: "Iv1.e52d7d48b0848df1",
+        clientSecret: "dbaf5deeca2347443efdb72f1c745cb2fdda33f0",
+        callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+      },
+      async function (accessToken, refreshToken, profile, done) {
+        const userEmail = profile._json.email;
+        const existingUser = await userModel.findOne({ email: userEmail });
+        if (!existingUser) {
+          const firstName = profile._json.name;
+          const user = {
+            firstName,
+            lastName: "",
+            email: userEmail,
+            password: "",
+          };
+          const insertedUser = await userModel.create(user);
+          console.log("inserto usuario");
+          return done(null, insertedUser);
+        }
+        console.log("el usuario ya existe");
+        return done(null, existingUser);
       }
     )
   );
