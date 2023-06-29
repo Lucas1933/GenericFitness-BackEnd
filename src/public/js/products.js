@@ -94,7 +94,6 @@ checkCartBtn.addEventListener("click", async (event) => {
   });
   const parsedResult = await result.json();
   const cartId = parsedResult.payload._id;
-  console.log(cartId);
   result = await fetch(`/api/carts/${cartId}`, {
     method: "PUT",
     headers: {
@@ -112,19 +111,15 @@ clearStorageBtn.addEventListener("click", (event) => {
 });
 
 logoutBtn.addEventListener("click", async (event) => {
-  const result = await fetch(`api/sessions/user-session`, {
-    method: "DELETE",
-  });
-
-  window.location.replace("/");
-});
-async function checkSession() {
-  const result = await fetch(`api/sessions/check-session`, {
-    method: "GET",
-  });
-  const parsedResult = await result.json();
-  if (parsedResult.isSessionExpired) {
-    window.location.replace("/");
+  try {
+    let response = await fetch("/api/sessions/logout", {
+      method: "DELETE",
+    });
+    const parsedResponse = await response.json();
+    if (response.status == 200) {
+      window.location.replace("/");
+    }
+  } catch (error) {
+    console.log(error);
   }
-}
-checkSession();
+});

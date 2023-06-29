@@ -1,10 +1,16 @@
 import passport from "passport";
 import local from "passport-local";
-import userModel from "../dao/mongo/models/userModel.js";
-import bcrypt from "bcrypt";
 import gitHub from "passport-github2";
+import { ExtractJwt, Strategy } from "passport-jwt";
+import { cookieExtractor, urlPrivilige } from "../utils.js";
+import bcrypt from "bcrypt";
+import userModel from "../dao/mongo/models/userModel.js";
 const LocalStrategy = local.Strategy;
 const GitHubStrategy = gitHub.Strategy;
+const jwtStrategy = Strategy;
+const jwtOptions = {};
+jwtOptions.jwtFromRequest = ExtractJwt.fromExtractors([cookieExtractor]);
+jwtOptions.secretOrKey = "jwtKey";
 const passportInit = () => {
   passport.use(
     "register",
@@ -26,7 +32,8 @@ const passportInit = () => {
               password: hashedPassword,
             };
             const result = await userModel.create(user);
-
+            console.log("creating user");
+            console.log(result);
             return done(null, result);
           }
         } catch (error) {
@@ -91,26 +98,28 @@ const passportInit = () => {
             password: "",
           };
           const insertedUser = await userModel.create(user);
-          console.log("inserto usuario");
+
           return done(null, insertedUser);
+        } else {
+          return done(null, existingUser);
         }
-        console.log("el usuario ya existe");
-        return done(null, existingUser);
       }
     )
   );
-  passport.serializeUser(function (user, done) {
-    return done(null, user.id);
-  });
-  passport.deserializeUser(async function (id, done) {
-    if (id === 0) {
-      return done(null, {
-        role: "admin",
-        name: "ADMIN",
-      });
-    }
-    const user = await userModel.findOne({ _id: id });
-    return done(null, user);
-  });
+  passport.use(
+    "jwt",
+    new jwtStrategy(jwtOptions, async (jwtPayload, done) => {
+      const user = jwtPayload;
+      console.log("jwt !user");
+      if (!user) {
+        done(null, false, {
+          message: "token is not longer valid",
+        });
+      } else {
+        done(null, user);
+      }
+    })
+  );
 };
+
 export default passportInit;

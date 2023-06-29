@@ -1,16 +1,7 @@
 const form = document.getElementById("loginForm");
 const loginBtn = form.lastElementChild;
 const loginStatus = document.getElementById("loginStatus");
-
-async function checkSession() {
-  const response = await fetch(`api/sessions/check-session`, {
-    method: "GET",
-  });
-  const parsedResponse = await response.json();
-  if (!parsedResponse.isSessionExpired) {
-    window.location.replace("/products");
-  }
-}
+const tokenBtn = document.getElementById("token");
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = new FormData(form);
@@ -28,9 +19,8 @@ form.addEventListener("submit", async (event) => {
       body: parsedUser,
     });
     const parsedResponse = await response.json();
-    console.log(parsedResponse);
     if (response.status == 200) {
-      window.location.replace(parsedResponse.redirection);
+      window.location.replace(parsedResponse.redirect);
     } else if (response.status == 401) {
       loginStatus.innerHTML = parsedResponse.error;
     }
@@ -38,4 +28,3 @@ form.addEventListener("submit", async (event) => {
     console.log(error);
   }
 });
-checkSession();

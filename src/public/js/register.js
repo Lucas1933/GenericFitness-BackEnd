@@ -1,15 +1,7 @@
 const form = document.getElementById("registerForm");
 const registerBtn = form.lastElementChild;
 const registerFail = document.getElementById("registerFail");
-async function checkSession() {
-  const response = await fetch(`api/sessions/check-session`, {
-    method: "GET",
-  });
-  const parsedResponse = await response.json();
-  if (!parsedResponse.isSessionExpired) {
-    window.location.replace("/products");
-  }
-}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = new FormData(form);
@@ -38,5 +30,3 @@ form.addEventListener("submit", async (event) => {
     console.log(error);
   }
 });
-
-checkSession();
