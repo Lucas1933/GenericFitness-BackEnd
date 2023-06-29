@@ -2,7 +2,7 @@ import passport from "passport";
 import local from "passport-local";
 import gitHub from "passport-github2";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { cookieExtractor, urlPrivilige } from "../utils.js";
+import { cookieExtractor } from "../utils.js";
 import bcrypt from "bcrypt";
 import userModel from "../dao/mongo/models/userModel.js";
 const LocalStrategy = local.Strategy;
@@ -32,8 +32,6 @@ const passportInit = () => {
               password: hashedPassword,
             };
             const result = await userModel.create(user);
-            console.log("creating user");
-            console.log(result);
             return done(null, result);
           }
         } catch (error) {
@@ -110,7 +108,6 @@ const passportInit = () => {
     "jwt",
     new jwtStrategy(jwtOptions, async (jwtPayload, done) => {
       const user = jwtPayload;
-      console.log("jwt !user");
       if (!user) {
         done(null, false, {
           message: "token is not longer valid",
