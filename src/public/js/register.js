@@ -19,9 +19,11 @@ form.addEventListener("submit", async (event) => {
       body: parsedUser,
     });
     const parsedResponse = await response.json();
+    console.log(parsedResponse);
+
     if (response.status == 201) {
       window.location.replace(parsedResponse.redirection);
-    } else if (response.status == 400) {
+    } else if (response.status == 409) {
       registerFail.innerHTML = parsedResponse.error;
     } else if (response.status == 500) {
       document.body.innerHTML = "500 internal server error";

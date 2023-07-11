@@ -18,7 +18,15 @@ export const cookieExtractor = (req) => {
   }
   return token;
 };
-
+export const decodeJwtToken = (token, secretKey) => {
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    return decoded;
+  } catch (error) {
+    console.error("Error decoding JWT token:", error.message);
+    return null;
+  }
+};
 export const generateCookie = (res, token) => {
   const cookieOptions = {
     httpOnly: true,

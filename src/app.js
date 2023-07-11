@@ -4,15 +4,17 @@ import { Server } from "socket.io";
 import handlebars from "express-handlebars";
 import cookieParser from "cookie-parser";
 
-import productsRouter from "./routes/productsRouter.js";
+import { ProductRouter } from "./routes/products.router.js";
+import { SessionRouter } from "./routes/SessionRouter.js";
+import { ViewRouter } from "./routes/ViewRouter.js";
 import cartsRouter from "./routes/cartsRouter.js";
-import sessionsRouter from "./routes/sessionsRouter.js";
-import viewsRouter from "./routes/viewsRouter.js";
+
 import registerChatHandler from "./listeners/chatHanlder.js";
 import passportInit from "./config/passport.js";
 
 import __dirname from "./utils.js";
 import { urlAcces } from "./middlewares/urlAcces.js";
+
 const app = express();
 const PORT = process.env.PORT || 8080;
 const serverExpress = app.listen(PORT, () => {
@@ -30,12 +32,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`)); /* static content */
 app.use(cookieParser("cookieKey"));
-
+const productRouter = new ProductRouter();
+const viewRouter = new ViewRouter();
+const sessionRouter = new SessionRouter();
 passportInit();
-app.use("/api/products", productsRouter);
+app.use("/api/products", productRouter.getRouter());
 app.use("/api/carts", cartsRouter);
-app.use("/api/sessions", sessionsRouter);
-app.use("/", viewsRouter);
+app.use("/api/sessions", sessionRouter.getRouter());
+app.use("/", viewRouter.getRouter());
 
 app.use((err, req, res, next) => {
   return res.status(res.errorCode || 500).send({ error: err.message });
