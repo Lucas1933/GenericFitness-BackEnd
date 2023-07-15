@@ -4,7 +4,9 @@ import gitHub from "passport-github2";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { cookieExtractor } from "../utils.js";
 import bcrypt from "bcrypt";
-import userModel from "../dao/mongo/models/userModel.js";
+import SessionService from "../service/sessionService.js";
+import UserRepository from "../service/repositories/userRepository.js";
+const sessionService = new SessionService(new UserRepository());
 const LocalStrategy = local.Strategy;
 const GitHubStrategy = gitHub.Strategy;
 const jwtStrategy = Strategy;
@@ -19,7 +21,7 @@ const passportInit = () => {
       async (req, email, password, done) => {
         try {
           const { firstName, lastName } = req.body;
-          const existingUser = await userModel.findOne({ email });
+          const existingUser = await sessionService.getUser(email);
           if (existingUser) {
             return done(null, false, { message: "el usuario ya existe" });
           } else {
@@ -31,7 +33,7 @@ const passportInit = () => {
               email,
               password: hashedPassword,
             };
-            const result = await userModel.create(user);
+            const result = await sessionService.createUser(user);
             return done(null, result);
           }
         } catch (error) {
@@ -54,7 +56,8 @@ const passportInit = () => {
             };
             return done(null, admin);
           }
-          const existingUser = await userModel.findOne({ email });
+
+          const existingUser = await sessionService.getUser(email);
           if (!existingUser) {
             return done(null, false, { message: "user credentials incorrect" });
           } else {
@@ -86,7 +89,7 @@ const passportInit = () => {
       },
       async function (accessToken, refreshToken, profile, done) {
         const userEmail = profile._json.email;
-        const existingUser = await userModel.findOne({ email: userEmail });
+        const existingUser = await sessionService.getUser(email);
         if (!existingUser) {
           const firstName = profile._json.name;
           const user = {
@@ -95,8 +98,7 @@ const passportInit = () => {
             email: userEmail,
             password: "",
           };
-          const insertedUser = await userModel.create(user);
-
+          const insertedUser = await sessionService.createUser(user);
           return done(null, insertedUser);
         } else {
           return done(null, existingUser);

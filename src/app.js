@@ -4,16 +4,15 @@ import { Server } from "socket.io";
 import handlebars from "express-handlebars";
 import cookieParser from "cookie-parser";
 
-import { ProductRouter } from "./routes/products.router.js";
-import { SessionRouter } from "./routes/SessionRouter.js";
-import { ViewRouter } from "./routes/ViewRouter.js";
+import { ProductRouter } from "./routes/productsRouter.js";
+import { SessionRouter } from "./routes/sessionRouter.js";
+import { ViewRouter } from "./routes/viewRouter.js";
 import cartsRouter from "./routes/cartsRouter.js";
 
 import registerChatHandler from "./listeners/chatHanlder.js";
 import passportInit from "./config/passport.js";
 
 import __dirname from "./utils.js";
-import { urlAcces } from "./middlewares/urlAcces.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -22,7 +21,8 @@ const serverExpress = app.listen(PORT, () => {
 });
 const io = new Server(serverExpress);
 const connection = mongoose.connect(
-  "mongodb+srv://lucas1933:1234@clusterpk.ghi4uir.mongodb.net/GenericFitness?retryWrites=true&w=majority"
+  "mongodb://localhost:27017/"
+  /* "mongodb+srv://lucas1933:1234@clusterpk.ghi4uir.mongodb.net/GenericFitness?retryWrites=true&w=majority" */
 );
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
