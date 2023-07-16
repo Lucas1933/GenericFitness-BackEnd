@@ -1,7 +1,7 @@
 import ViewController from "../controller/viewController.js";
 import { BaseRouter } from "./baseRouter.js";
 const viewController = new ViewController();
-export class ViewRouter extends BaseRouter {
+export default class ViewRouter extends BaseRouter {
   init() {
     this.get("/", this.handlePolicies(["PUBLIC"]), viewController.renderLogin);
     this.get(

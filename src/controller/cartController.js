@@ -1,17 +1,15 @@
 import CartService from "../service/cartService.js";
-
+import CartRepository from "../service/repositories/cartRepository.js";
+const cartService = new CartService(new CartRepository());
 export default class CartController {
-  constructor() {
-    this.cartService = new CartService();
-  }
-  getCarts(req, res) {
-    const carts = this.cartService.getAllCarts();
+  async getCarts(req, res) {
+    const carts = await cartService.getAllCarts();
     res.send(carts);
   }
 
-  getCartById(req, res) {
+  async getCartById(req, res) {
     try {
-      const cart = this.cartService.getCartById(req.params.cartId);
+      const cart = await cartService.getCartById(req.params.cartId);
       res.status(200).send({ status: "200", payload: cart.products });
     } catch (error) {
       console.log(error);
@@ -19,9 +17,9 @@ export default class CartController {
     }
   }
 
-  createCart(req, res) {
+  async createCart(req, res) {
     try {
-      const result = this.cartService.createCart();
+      const result = await cartService.createCart();
       res.status(201).send({
         message: "cart created sucessfully",
         status: "201",
@@ -33,12 +31,11 @@ export default class CartController {
     }
   }
 
-  addProduct(req, res) {
+  async addProduct(req, res) {
     try {
       const cartId = req.params.cartId;
       const productId = req.params.productId;
-
-      this.cartService.addProduct(cartId, productId);
+      const updatedCart = await cartService.addProduct(cartId, productId);
       return res.status(200).send({
         status: "200",
         message: "product added to the cart successfully",
@@ -49,9 +46,9 @@ export default class CartController {
     }
   }
 
-  fillCart(req, res) {
+  async fillCart(req, res) {
     try {
-      const cart = this.cartService.fillCart(req.params.cartId, req.body);
+      const cart = await cartService.fillCart(req.params.cartId, req.body);
       return res.status(200).send({
         status: "200",
         message: "Cart filled",
@@ -62,9 +59,9 @@ export default class CartController {
     }
   }
 
-  updateProduct(req, res) {
+  async updateProduct(req, res) {
     try {
-      const cart = this.cartService.updateProduct(
+      const cart = await cartService.updateProduct(
         req.params.cartId,
         req.params.productId,
         req.body.quantity
@@ -79,13 +76,13 @@ export default class CartController {
     }
   }
 
-  deleteByQuery(req, res) {
-    const carts = this.cartService.deleteCart(req.query.cartId);
-    res.send(`cart with id ${req.query.cartId} was deleted`);
+  async deleteCart(req, res) {
+    const cart = await cartService.deleteCart(req.params.cartId);
+    return res.send(`cart with id ${req.params.cartId} was deleted`);
   }
 
-  emptyCart(req, res) {
-    const cart = this.cartService.emptyCart(req.params.cartId);
+  async emptyCart(req, res) {
+    const cart = await cartService.emptyCart(req.params.cartId);
     return res
       .status(200)
       .send({ status: "200", message: "cart emptied sucessfully" });
@@ -93,7 +90,7 @@ export default class CartController {
 
   deleteProduct(req, res) {
     try {
-      const cart = this.cartService.removeProduct(
+      const cart = cartService.removeProduct(
         req.params.cartId,
         req.params.productId
       );

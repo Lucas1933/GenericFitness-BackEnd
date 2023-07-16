@@ -3,7 +3,7 @@ import ProductRepository from "../service/repositories/productRepository.js";
 const productService = new ProductService(new ProductRepository());
 export default class ProductController {
   constructor() {}
-  getProducts(req, res) {
+  async getProducts(req, res) {
     try {
       const queryLimit = req.query.limit || 10;
       const queryPage = req.query.page || 1;
@@ -21,7 +21,11 @@ export default class ProductController {
         hasNextPage,
         prevPage,
         nextPage,
-      } = productService.getPaginatedProducts(queryLimit, queryPage, querySort);
+      } = await productService.getPaginatedProducts(
+        queryLimit,
+        queryPage,
+        querySort
+      );
       return res.status(200).send({
         status: "200",
         payload: docs,
@@ -42,11 +46,8 @@ export default class ProductController {
 
   createProduct(req, res) {
     try {
-      const io = req.app.get("socketio");
       const product = req.body;
-
       productService.addProduct(product);
-      io.emit("updateProducts", productService.getProducts());
       return res.sendStatus(201);
     } catch (error) {
       console.log(error);
@@ -83,8 +84,6 @@ export default class ProductController {
 
   async deleteProduct(req, res) {
     try {
-      const io = req.app.get("socketio");
-      io.emit("updateProducts", productService.getProducts());
       const deletedProduct = await productService.deleteProduct(
         req.params.productId
       );

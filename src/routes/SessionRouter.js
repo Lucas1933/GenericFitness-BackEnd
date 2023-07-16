@@ -3,7 +3,7 @@ import { BaseRouter } from "./baseRouter.js";
 import passport from "passport";
 import { passportCall } from "../middlewares/passportCall.js";
 const sessionController = new SessionController();
-export class SessionRouter extends BaseRouter {
+export default class SessionRouter extends BaseRouter {
   init() {
     this.post(
       "/login",
