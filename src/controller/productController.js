@@ -1,8 +1,5 @@
-import ProductService from "../service/productService.js";
-import ProductRepository from "../service/repositories/productRepository.js";
-const productService = new ProductService(new ProductRepository());
+import { productService } from "../service/index.js";
 export default class ProductController {
-  constructor() {}
   async getProducts(req, res) {
     try {
       const queryLimit = req.query.limit || 10;

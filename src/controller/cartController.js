@@ -1,6 +1,4 @@
-import CartService from "../service/cartService.js";
-import CartRepository from "../service/repositories/cartRepository.js";
-const cartService = new CartService(new CartRepository());
+import { cartService } from "../service/index.js";
 export default class CartController {
   async getCarts(req, res) {
     const carts = await cartService.getAllCarts();

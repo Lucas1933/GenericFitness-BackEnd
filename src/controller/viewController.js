@@ -1,6 +1,4 @@
-import ViewService from "../service/viewService.js";
-import ProductRepository from "../service/repositories/productRepository.js";
-const viewService = new ViewService(new ProductRepository());
+import { viewService } from "../service/index.js";
 export default class ViewController {
   renderLogin(req, res) {
     res.render("login");
@@ -14,11 +12,11 @@ export default class ViewController {
     res.render("ecommerceChat");
   }
   renderCart(req, res) {
-    const cart = this.viewService.getCart(req.params.cartId);
+    const cart = viewService.getCart(req.params.cartId);
     res.render("carts", { products: cart.products, id: req.params.cartId });
   }
   renderRealTimeProducts(req, res) {
-    const products = this.viewService.getProducts();
+    const products = viewService.getProducts();
     res.render("realTimeProducts", { products: products });
   }
   async renderProducts(req, res) {
