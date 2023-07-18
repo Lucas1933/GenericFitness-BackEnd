@@ -7,8 +7,8 @@ export default class SessionService {
     const user = await this.repository.getUser(email);
     return user ? user : null;
   }
-  createUser(user) {
-    const createdUser = this.repository.createUser(user);
+  async createUser(user) {
+    const createdUser = await this.repository.createUser(user);
     return user;
   }
 }

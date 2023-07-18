@@ -7,7 +7,7 @@ const __dirname = dirname(__filename);
 export const generateToken = (user) => {
   const payload = user;
   const token = jwt.sign(payload, "jwtKey", {
-    expiresIn: /* "24h" */ "10s",
+    expiresIn: "24h" /* "10s" */,
   });
   return token;
 };
@@ -30,7 +30,7 @@ export const decodeJwtToken = (token, secretKey) => {
 export const generateCookie = (res, token) => {
   const cookieOptions = {
     httpOnly: true,
-    maxAge: /* 24 * 60 * 60 * 1000 */ 10 * 1000,
+    maxAge: 24 * 60 * 60 * 1000 /*  10 * 1000 */,
   };
   res.cookie("token", token, cookieOptions);
 };

@@ -3,10 +3,30 @@ import ProductController from "../controller/productController.js";
 const productController = new ProductController();
 export default class ProductRouter extends BaseRouter {
   init() {
-    this.get("/", productController.getProducts);
-    this.post("/", productController.createProduct);
-    this.get("/:productId", productController.getProductById);
-    this.put("/:productId", productController.updateProduct);
-    this.delete("/:productId", productController.deleteProduct);
+    this.get(
+      "/",
+      this.handlePolicies(["ADMIN"]),
+      productController.getProducts
+    );
+    this.post(
+      "/",
+      this.handlePolicies(["ADMIN"]),
+      productController.createProduct
+    );
+    this.get(
+      "/:productId",
+      this.handlePolicies(["ADMIN"]),
+      productController.getProductById
+    );
+    this.put(
+      "/:productId",
+      this.handlePolicies(["ADMIN"]),
+      productController.updateProduct
+    );
+    this.delete(
+      "/:productId",
+      this.handlePolicies(["ADMIN"]),
+      productController.deleteProduct
+    );
   }
 }

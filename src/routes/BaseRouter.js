@@ -39,6 +39,23 @@ export class BaseRouter {
         req.user = user;
         return next();
       }
+      if (policies.includes("ADMIN")) {
+        const user = this.getCurrentUser(req);
+        if (!user || user.role.toUpperCase() != "ADMIN") {
+          return res.redirect("/");
+        }
+        req.user = user;
+        return next();
+      }
+      if (policies.includes("USER")) {
+        const user = this.getCurrentUser(req);
+        console.log(user);
+        if (!user || user.role.toUpperCase() != "USER") {
+          return res.redirect("/");
+        }
+        req.user = user;
+        return next();
+      }
       next();
     };
   }

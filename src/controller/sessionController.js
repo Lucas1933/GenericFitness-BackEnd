@@ -1,20 +1,18 @@
-import UserRepository from "../service/repositories/userRepository.js";
-import SessionService from "../service/sessionService.js";
+import { sessionService, cartService } from "../service/index.js";
 import { generateCookie, generateToken } from "../utils.js";
 
 export default class SessionController {
-  constructor() {
-    this.sessionService = new SessionService(new UserRepository());
-  }
+  constructor() {}
 
   logUser(req, res) {
     try {
       const user = {
         name: req.user.firstName,
         role: req.user.role,
-        id: req.user.id,
+        cart: req.user.cart,
         email: req.user.email,
       };
+      console.log(user);
       const token = generateToken(user);
       generateCookie(res, token);
       res.status(200).send({
@@ -26,13 +24,14 @@ export default class SessionController {
       console.log(error);
     }
   }
-  registerUser(req, res) {
+  async registerUser(req, res) {
     const user = {
       name: req.user.firstName,
       role: req.user.role,
-      id: req.user.id,
+      cart: req.user.cart,
       email: req.user.email,
     };
+    console.log("register user", user);
     const token = generateToken(user);
     generateCookie(res, token);
     res.status(201).send({
@@ -58,8 +57,7 @@ export default class SessionController {
   }
   isUserRegistered(req, res, next) {
     const email = req.body.email;
-    console.log(email);
-    const exists = this.sessionService.getUser(email);
+    const exists = sessionService.getUser(email);
     if (exists) {
       return res.status(409).send({ error: "Email already exists" });
     }

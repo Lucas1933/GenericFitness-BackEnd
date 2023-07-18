@@ -8,9 +8,21 @@ export default class CartRouter extends BaseRouter {
     this.delete("/:cartId", cartController.deleteCart);
     this.get("/:cartId", cartController.getCartById);
     this.put("/:cartId", cartController.fillCart);
-    this.delete("/empty/:cartId", cartController.emptyCart);
-    this.post("/:cartId/product/:productId", cartController.addProduct);
+    this.delete(
+      "/empty/:cartId",
+      this.handlePolicies(["USER"]),
+      cartController.emptyCart
+    );
+    this.post(
+      "/:cartId/product/:productId",
+      this.handlePolicies(["USER"]),
+      cartController.addProduct
+    );
     this.put("/:cartId/products/:productId", cartController.updateProduct);
-    this.delete("/:cartId/products/:productId", cartController.deleteProduct);
+    this.delete(
+      "/:cartId/products/:productId",
+      this.handlePolicies(["USER"]),
+      cartController.deleteProduct
+    );
   }
 }

@@ -1,4 +1,5 @@
 import passport from "passport";
+import { cartService } from "../service/index.js";
 import local from "passport-local";
 import gitHub from "passport-github2";
 import { ExtractJwt, Strategy } from "passport-jwt";
@@ -27,13 +28,18 @@ const passportInit = () => {
           } else {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
+            const cart = await cartService.createCart();
+
             const user = {
               firstName,
               lastName,
               email,
+              role: "user",
+              cart: cart._id,
               password: hashedPassword,
             };
             const result = await sessionService.createUser(user);
+            console.log("RESULT", result);
             return done(null, result);
           }
         } catch (error) {
