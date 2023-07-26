@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { cookieExtractor, decodeJwtToken } from "../utils.js";
+import { cookieExtractor, decodeJwtToken } from "../utils/utils.js";
 export class BaseRouter {
   constructor() {
     this.router = Router();

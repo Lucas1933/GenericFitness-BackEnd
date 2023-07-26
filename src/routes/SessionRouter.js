@@ -24,8 +24,9 @@ export default class SessionRouter extends BaseRouter {
     );
     this.get(
       "/githubcallback",
-      passport.authenticate("github", { session: false }),
-      sessionController.temporalMethodLoginGit
+      this.handlePolicies(["PUBLIC"]),
+      passportCall("github"),
+      sessionController.logUser
     );
     this.delete("/logout", sessionController.logOutUser);
   }

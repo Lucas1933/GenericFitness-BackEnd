@@ -1,8 +1,4 @@
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import jwt from "jsonwebtoken";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export const generateToken = (user) => {
   const payload = user;
@@ -34,13 +30,3 @@ export const generateCookie = (res, token) => {
   };
   res.cookie("token", token, cookieOptions);
 };
-
-export const urlPrivilige = (url) => {
-  const urls = {
-    "/": "public",
-    "/register": "public",
-    "/products": "private",
-  };
-  return urls[url];
-};
-export default __dirname;

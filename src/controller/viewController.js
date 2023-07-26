@@ -7,18 +7,11 @@ export default class ViewController {
   renderRegister(req, res) {
     res.render("register");
   }
-
-  renderChat(req, res) {
-    res.render("ecommerceChat");
-  }
   renderCart(req, res) {
     const cart = viewService.getCart(req.params.cartId);
     res.render("carts", { products: cart.products, id: req.params.cartId });
   }
-  renderRealTimeProducts(req, res) {
-    const products = viewService.getProducts();
-    res.render("realTimeProducts", { products: products });
-  }
+
   async renderProducts(req, res) {
     const queryLimit = req.query.limit || 10;
     const queryPage = req.query.page || 1;
@@ -39,7 +32,7 @@ export default class ViewController {
     } = await viewService.getProducts(queryLimit, queryPage, querySort);
     const prevLink = `/products?limit=${queryLimit}&page=${prevPage}&sort=${req.query.sort}`;
     const nextLink = `/products?limit=${queryLimit}&page=${nextPage}&sort=${req.query.sort}`;
-
+    console.log(req.user);
     res.render("products", {
       products: docs,
       page,
@@ -49,7 +42,7 @@ export default class ViewController {
       nextPage,
       prevLink,
       nextLink,
-      userName: req.user.name,
+      userName: req.user.fullName,
       userRole: req.user.role,
     });
   }

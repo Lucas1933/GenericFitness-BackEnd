@@ -1,4 +1,4 @@
-import { generateCookie, generateToken } from "../utils.js";
+import { generateCookie, generateToken } from "../utils/utils.js";
 import UserTokenDto from "../dto/userTokenDTO.js";
 export default class SessionService {
   constructor(repository) {

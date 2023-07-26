@@ -5,7 +5,8 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 
 import bcrypt from "bcrypt";
 import { cartService, sessionService } from "../service/index.js";
-import { cookieExtractor } from "../utils.js";
+import { cookieExtractor } from "../utils/utils.js";
+import { CONFLICT, UNAUTHORIZED } from "../utils/httpReponses.js";
 
 const LocalStrategy = local.Strategy;
 const GitHubStrategy = gitHub.Strategy;
@@ -24,7 +25,10 @@ const passportInit = () => {
           const dbUser = await sessionService.getUser(email);
 
           if (dbUser) {
-            return done(null, false, { message: "email already registered" });
+            return done(null, false, {
+              message: "email already registered",
+              status: CONFLICT,
+            });
           } else {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
@@ -65,7 +69,10 @@ const passportInit = () => {
 
           const dbUser = await sessionService.getUser(email);
           if (!dbUser) {
-            return done(null, false, { message: "user credentials incorrect" });
+            return done(null, false, {
+              message: "user credentials incorrect",
+              status: UNAUTHORIZED,
+            });
           } else {
             const isValidPassword = await bcrypt.compare(
               password,
@@ -76,6 +83,7 @@ const passportInit = () => {
             } else {
               return done(null, false, {
                 message: "user credentials incorrect",
+                status: UNAUTHORIZED,
               });
             }
           }
@@ -89,8 +97,8 @@ const passportInit = () => {
     "github",
     new GitHubStrategy(
       {
-        clientID: "Iv1.e52d7d48b0848df1",
-        clientSecret: "dbaf5deeca2347443efdb72f1c745cb2fdda33f0",
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_SECRET,
         callbackURL: "http://localhost:8080/api/sessions/githubcallback",
       },
       async function (accessToken, refreshToken, profile, done) {

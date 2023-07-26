@@ -11,7 +11,7 @@ import CartRouter from "./routes/cartRouter.js";
 
 import passportInit from "./config/passport.js";
 
-import __dirname from "./utils.js";
+import __dirname from "./path.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
