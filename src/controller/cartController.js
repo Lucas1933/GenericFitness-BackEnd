@@ -1,4 +1,4 @@
-import { cartService } from "../service/index.js";
+import { cartService, ticketService } from "../service/index.js";
 export default class CartController {
   async getCarts(req, res) {
     const carts = await cartService.getAllCarts();
@@ -85,7 +85,24 @@ export default class CartController {
       .status(200)
       .send({ status: "200", message: "cart emptied sucessfully" });
   }
-
+  async purchase(req, res) {
+    try {
+      const amount = await cartService.getPurchaseAmount(req.params.cartId);
+      const purchaser = req.user.email;
+      const ticket = await ticketService.createTicket({
+        amount,
+        purchaser,
+      });
+      const unavailableProducts = await cartService.getProductsIds(
+        req.params.cartId
+      );
+      /* send ticket to user*/
+      res.send({
+        message: "purchase completed",
+        payload: { unavailableProducts },
+      });
+    } catch (error) {}
+  }
   deleteProduct(req, res) {
     try {
       const cart = cartService.removeProduct(

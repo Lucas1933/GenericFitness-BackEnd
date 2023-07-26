@@ -18,6 +18,11 @@ export default class CartRouter extends BaseRouter {
       this.handlePolicies(["USER"]),
       cartController.addProduct
     );
+    this.post(
+      "/:cartId/purchase",
+      this.handlePolicies(["USER"]),
+      cartController.purchase
+    );
     this.put("/:cartId/products/:productId", cartController.updateProduct);
     this.delete(
       "/:cartId/products/:productId",

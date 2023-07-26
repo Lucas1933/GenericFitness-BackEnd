@@ -1,3 +1,4 @@
+import "./config/config.js";
 import express from "express";
 import mongoose from "mongoose";
 import handlebars from "express-handlebars";
@@ -17,10 +18,8 @@ const PORT = process.env.PORT || 8080;
 const serverExpress = app.listen(PORT, () => {
   console.log(`server running and listening in port ${PORT}`);
 });
-const connection = mongoose.connect(
-  "mongodb://localhost:27017/"
-  /* "mongodb+srv://lucas1933:1234@clusterpk.ghi4uir.mongodb.net/GenericFitness?retryWrites=true&w=majority" */
-);
+const connection = mongoose.connect(process.env.DB_LOCAL);
+
 app.engine("handlebars", handlebars.engine());
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "handlebars");
@@ -28,7 +27,7 @@ app.set("view engine", "handlebars");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`)); /* static content */
-app.use(cookieParser("cookieKey"));
+app.use(cookieParser(process.env.COOKIE_KEY));
 
 const productRouter = new ProductRouter();
 const viewRouter = new ViewRouter();

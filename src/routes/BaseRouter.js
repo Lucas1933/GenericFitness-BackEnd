@@ -49,7 +49,7 @@ export class BaseRouter {
       }
       if (policies.includes("USER")) {
         const user = this.getCurrentUser(req);
-        console.log(user);
+
         if (!user || user.role.toUpperCase() != "USER") {
           return res.redirect("/");
         }
@@ -61,7 +61,7 @@ export class BaseRouter {
   }
   getCurrentUser(req) {
     const token = cookieExtractor(req);
-    const user = decodeJwtToken(token, "jwtKey");
+    const user = decodeJwtToken(token, process.env.JWT_KEY);
     return user;
   }
   applyCallBacks(callbacks) {

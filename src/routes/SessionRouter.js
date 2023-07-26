@@ -8,9 +8,7 @@ export default class SessionRouter extends BaseRouter {
     this.post(
       "/login",
       this.handlePolicies(["PUBLIC"]),
-      passport.authenticate("login", {
-        session: false,
-      }),
+      passportCall("login"),
       sessionController.logUser
     );
     this.post(

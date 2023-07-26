@@ -6,7 +6,7 @@ const __dirname = dirname(__filename);
 
 export const generateToken = (user) => {
   const payload = user;
-  const token = jwt.sign(payload, "jwtKey", {
+  const token = jwt.sign(payload, process.env.JWT_KEY, {
     expiresIn: "24h" /* "10s" */,
   });
   return token;

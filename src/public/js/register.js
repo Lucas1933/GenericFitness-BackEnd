@@ -19,7 +19,6 @@ form.addEventListener("submit", async (event) => {
       body: parsedUser,
     });
     const parsedResponse = await response.json();
-    console.log(parsedResponse);
 
     if (response.status == 201) {
       window.location.replace(parsedResponse.redirection);

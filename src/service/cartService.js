@@ -1,3 +1,4 @@
+import { productService } from "./index.js";
 export default class CartService {
   constructor(repository) {
     this.repository = repository;
@@ -41,5 +42,26 @@ export default class CartService {
   async removeProduct(cartId, productId) {
     const updatedCart = await this.repository.deleteProduct(cartId, productId);
     return updatedCart;
+  }
+  async getProductsIds(cartId) {
+    const products = await this.repository.getProductsIds(cartId);
+    return products;
+  }
+  async getPurchaseAmount(cartId) {
+    const cart = await this.getCartById(cartId);
+    const products = cart.products;
+    let amount = 0;
+    for (const product of products) {
+      if (product.quantity <= product.product.stock) {
+        amount += Number(product.product.price) * Number(product.quantity);
+        let newStock = product.product.stock - product.quantity;
+        await productService.updateProduct(product.product._id, {
+          stock: newStock,
+        });
+        await this.removeProduct(cartId, product._id);
+      }
+    }
+
+    return amount;
   }
 }

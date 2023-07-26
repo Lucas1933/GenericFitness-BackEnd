@@ -23,6 +23,10 @@ export default class ProductService {
     const updatedProduct = await this.repository.updateProduct(id, product);
     return updatedProduct;
   }
+  async compareProductsIds(id1, id2) {
+    const result = await this.repository.compareIds(id1, id2);
+    return result;
+  }
   async deleteProduct(id) {
     const deletedProduct = await this.repository.deleteProduct(id);
     return deletedProduct;

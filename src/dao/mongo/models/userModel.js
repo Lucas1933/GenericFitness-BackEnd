@@ -4,8 +4,8 @@ const schema = new mongoose.Schema(
   {
     firstName: String,
     lastName: String,
-    email: String,
-    password: String,
+    email: { type: String, required: true },
+    password: { type: String, required: true },
     cart: mongoose.Schema.Types.ObjectId,
     role: {
       type: String,

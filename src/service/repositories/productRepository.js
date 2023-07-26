@@ -44,4 +44,8 @@ export default class ProductRepository {
     const exists = await productModel.exists(id);
     return exists ? true : false;
   }
+  async compareIds(id1, id2) {
+    const result = await productModel.equals(id1, id2);
+    return result;
+  }
 }

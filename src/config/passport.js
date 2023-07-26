@@ -1,19 +1,18 @@
 import passport from "passport";
-import { cartService } from "../service/index.js";
 import local from "passport-local";
 import gitHub from "passport-github2";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { cookieExtractor } from "../utils.js";
+
 import bcrypt from "bcrypt";
-import SessionService from "../service/sessionService.js";
-import UserRepository from "../service/repositories/userRepository.js";
-const sessionService = new SessionService(new UserRepository());
+import { cartService, sessionService } from "../service/index.js";
+import { cookieExtractor } from "../utils.js";
+
 const LocalStrategy = local.Strategy;
 const GitHubStrategy = gitHub.Strategy;
 const jwtStrategy = Strategy;
 const jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromExtractors([cookieExtractor]);
-jwtOptions.secretOrKey = "jwtKey";
+jwtOptions.secretOrKey = process.env.JWT_KEY;
 const passportInit = () => {
   passport.use(
     "register",
@@ -22,9 +21,10 @@ const passportInit = () => {
       async (req, email, password, done) => {
         try {
           const { firstName, lastName } = req.body;
-          const existingUser = await sessionService.getUser(email);
-          if (existingUser) {
-            return done(null, false, { message: "el usuario ya existe" });
+          const dbUser = await sessionService.getUser(email);
+
+          if (dbUser) {
+            return done(null, false, { message: "email already registered" });
           } else {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
@@ -39,7 +39,7 @@ const passportInit = () => {
               password: hashedPassword,
             };
             const result = await sessionService.createUser(user);
-            console.log("RESULT", result);
+
             return done(null, result);
           }
         } catch (error) {
@@ -63,16 +63,16 @@ const passportInit = () => {
             return done(null, admin);
           }
 
-          const existingUser = await sessionService.getUser(email);
-          if (!existingUser) {
+          const dbUser = await sessionService.getUser(email);
+          if (!dbUser) {
             return done(null, false, { message: "user credentials incorrect" });
           } else {
-            const result = await bcrypt.compare(
+            const isValidPassword = await bcrypt.compare(
               password,
-              existingUser.password
+              dbUser.password
             );
-            if (result) {
-              return done(null, existingUser);
+            if (isValidPassword) {
+              return done(null, dbUser);
             } else {
               return done(null, false, {
                 message: "user credentials incorrect",

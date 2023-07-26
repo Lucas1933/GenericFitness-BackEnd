@@ -1,4 +1,5 @@
 import cartModel from "../../dao/mongo/models/cartModel.js";
+import { productService } from "../index.js";
 export default class CartRepository {
   async createCart() {
     const createdCart = await cartModel.create(undefined);
@@ -40,10 +41,11 @@ export default class CartRepository {
   }
   async deleteProduct(cartId, productId) {
     const cart = await cartModel.findById(cartId).lean();
-    const productIndex = cart.products.findIndex(
-      (eachProduct) => eachProduct.product == productId
+    const productIndex = cart.products.findIndex((eachProduct) =>
+      eachProduct._id.equals(productId)
     );
     cart.products.splice(productIndex, 1);
+
     const updatedCart = await cartModel.findByIdAndUpdate(cartId, {
       $set: cart,
     });
@@ -77,5 +79,13 @@ export default class CartRepository {
       $set: cart,
     });
     return updatedCart;
+  }
+  async getProductsIds(cartId) {
+    const cart = await cartModel.findById(cartId).lean();
+    const products = [];
+    cart.products.forEach((eachProduct) =>
+      products.push(eachProduct.product._id)
+    );
+    return products;
   }
 }

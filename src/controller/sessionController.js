@@ -1,4 +1,4 @@
-import { sessionService, cartService } from "../service/index.js";
+import { sessionService } from "../service/index.js";
 import { generateCookie, generateToken } from "../utils.js";
 
 export default class SessionController {
@@ -6,15 +6,7 @@ export default class SessionController {
 
   logUser(req, res) {
     try {
-      const user = {
-        name: req.user.firstName,
-        role: req.user.role,
-        cart: req.user.cart,
-        email: req.user.email,
-      };
-      console.log(user);
-      const token = generateToken(user);
-      generateCookie(res, token);
+      sessionService.generateTokenAndCookie(req.user, res);
       res.status(200).send({
         status: "sucess",
         message: "user validated correctly",
@@ -24,16 +16,8 @@ export default class SessionController {
       console.log(error);
     }
   }
-  async registerUser(req, res) {
-    const user = {
-      name: req.user.firstName,
-      role: req.user.role,
-      cart: req.user.cart,
-      email: req.user.email,
-    };
-    console.log("register user", user);
-    const token = generateToken(user);
-    generateCookie(res, token);
+  registerUser(req, res) {
+    sessionService.generateTokenAndCookie(req.user, res);
     res.status(201).send({
       status: "sucess",
       message: "user registered correctly",
