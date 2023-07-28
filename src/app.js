@@ -8,6 +8,7 @@ import ProductRouter from "./routes/productRouter.js";
 import SessionRouter from "./routes/sessionRouter.js";
 import ViewRouter from "./routes/viewRouter.js";
 import CartRouter from "./routes/cartRouter.js";
+import TestRouter from "./routes/testRouter.js";
 
 import passportInit from "./config/passport.js";
 
@@ -33,12 +34,14 @@ const productRouter = new ProductRouter();
 const viewRouter = new ViewRouter();
 const sessionRouter = new SessionRouter();
 const cartRouter = new CartRouter();
+const testRouter = new TestRouter();
 
 passportInit();
 
 app.use("/api/products", productRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/sessions", sessionRouter.getRouter());
+app.use("/api/test", testRouter.getRouter());
 app.use("/", viewRouter.getRouter());
 
 app.use((err, req, res, next) => {

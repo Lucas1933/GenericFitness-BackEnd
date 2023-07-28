@@ -22,7 +22,7 @@ form.addEventListener("submit", async (event) => {
     if (response.status == 200) {
       window.location.replace(parsedResponse.redirect);
     } else if (response.status == 401) {
-      loginStatus.innerHTML = parsedResponse.error;
+      loginStatus.innerHTML = parsedResponse.message;
     }
   } catch (error) {
     console.log(error);

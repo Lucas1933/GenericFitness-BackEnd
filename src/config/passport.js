@@ -42,9 +42,9 @@ const passportInit = () => {
               cart: cart._id,
               password: hashedPassword,
             };
-            const result = await sessionService.createUser(user);
+            const insertedUser = await sessionService.createUser(user);
 
-            return done(null, result);
+            return done(null, insertedUser);
           }
         } catch (error) {
           console.log(error);
@@ -103,13 +103,16 @@ const passportInit = () => {
       },
       async function (accessToken, refreshToken, profile, done) {
         const userEmail = profile._json.email;
-        const existingUser = await sessionService.getUser(email);
+        const existingUser = await sessionService.getUser(userEmail);
         if (!existingUser) {
+          const cart = await cartService.createCart();
           const firstName = profile._json.name;
           const user = {
             firstName,
             lastName: "",
             email: userEmail,
+            role: "user",
+            cart: cart._id,
             password: "",
           };
           const insertedUser = await sessionService.createUser(user);

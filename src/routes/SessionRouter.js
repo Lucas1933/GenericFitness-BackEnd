@@ -24,9 +24,8 @@ export default class SessionRouter extends BaseRouter {
     );
     this.get(
       "/githubcallback",
-      this.handlePolicies(["PUBLIC"]),
       passportCall("github"),
-      sessionController.logUser
+      sessionController.githubLogin
     );
     this.delete("/logout", sessionController.logOutUser);
   }

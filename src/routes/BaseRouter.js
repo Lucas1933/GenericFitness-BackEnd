@@ -24,6 +24,7 @@ export class BaseRouter {
   handlePolicies(policies) {
     return (req, res, next) => {
       if (policies.includes("PUBLIC")) {
+        console.log("PUBLIC");
         const user = this.getCurrentUser(req);
         if (user) {
           req.user = user;
@@ -32,6 +33,7 @@ export class BaseRouter {
         return next();
       }
       if (policies.includes("AUTHENTICATED")) {
+        console.log("AUTHENTICATED");
         const user = this.getCurrentUser(req);
         if (!user) {
           return res.redirect("/");
@@ -40,6 +42,7 @@ export class BaseRouter {
         return next();
       }
       if (policies.includes("ADMIN")) {
+        console.log("ADMIN");
         const user = this.getCurrentUser(req);
         if (!user || user.role.toUpperCase() != "ADMIN") {
           return res.redirect("/");
@@ -48,6 +51,7 @@ export class BaseRouter {
         return next();
       }
       if (policies.includes("USER")) {
+        console.log("USER");
         const user = this.getCurrentUser(req);
 
         if (!user || user.role.toUpperCase() != "USER") {

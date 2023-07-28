@@ -5,7 +5,7 @@ const schema = new mongoose.Schema(
     firstName: String,
     lastName: String,
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: String,
     cart: mongoose.Schema.Types.ObjectId,
     role: {
       type: String,

@@ -1,4 +1,5 @@
 import { sessionService } from "../service/index.js";
+import { CREATED, OK } from "../utils/httpReponses.js";
 
 export default class SessionController {
   constructor() {}
@@ -6,7 +7,7 @@ export default class SessionController {
   logUser(req, res) {
     try {
       sessionService.generateTokenAndCookie(req.user, res);
-      res.status(200).send({
+      res.status(OK).send({
         status: "sucess",
         message: "user validated correctly",
         redirect: "/products",
@@ -17,16 +18,19 @@ export default class SessionController {
   }
   registerUser(req, res) {
     sessionService.generateTokenAndCookie(req.user, res);
-    res.status(201).send({
-      status: "sucess",
+    res.status(CREATED).send({
+      status: "created",
       message: "user registered correctly",
       redirection: "/products",
     });
   }
-
+  githubLogin(req, res) {
+    sessionService.generateTokenAndCookie(req.user, res);
+    res.redirect("/products");
+  }
   logOutUser(req, res) {
     res.clearCookie("token");
-    res.status(200).send({ message: "Logout successful" });
+    res.status(OK).send({ message: "Logout successful" });
   }
   isUserRegistered(req, res, next) {
     const email = req.body.email;

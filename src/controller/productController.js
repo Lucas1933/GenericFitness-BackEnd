@@ -1,4 +1,5 @@
 import { productService } from "../service/index.js";
+import { OK } from "../utils/httpReponses.js";
 export default class ProductController {
   async getProducts(req, res) {
     try {
@@ -54,6 +55,7 @@ export default class ProductController {
 
   async getProductById(req, res) {
     try {
+      console.log(req.params.productId);
       const product = await productService.getProductById(req.params.productId);
       return res.status(200).send({ status: "success", payload: product });
     } catch (error) {
@@ -91,5 +93,11 @@ export default class ProductController {
       console.log(error);
       return res.status(500).send({ error: "internal server error" });
     }
+  }
+
+  mocking(req, res) {
+    console.log("mocking");
+    const mockedProducts = productService.getMockedProducts();
+    res.status(OK).send(mockedProducts);
   }
 }
