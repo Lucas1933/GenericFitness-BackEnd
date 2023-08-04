@@ -17,4 +17,7 @@ const schema = new mongoose.Schema(
 schema.plugin(mongoosePaginate);
 
 const productModel = mongoose.model(collection, schema);
+productModel.isIdValid = async function (id) {
+  return mongoose.Types.ObjectId.isValid(id);
+};
 export default productModel;

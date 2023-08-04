@@ -6,7 +6,7 @@ export default class ProductRouter extends BaseRouter {
     this.get(
       "/",
       this.handlePolicies(["ADMIN"]),
-      productController.getProducts
+      productController.getPaginatedProducts
     );
     this.post(
       "/",

@@ -11,7 +11,7 @@ export default class ViewRouter extends BaseRouter {
     );
     this.get(
       "/products",
-      this.handlePolicies(["PUBLIC"]),
+      this.handlePolicies(["AUTHENTICATED"]),
       viewController.renderProducts
     );
     this.get("/carts/:cartId", viewController.renderCart);

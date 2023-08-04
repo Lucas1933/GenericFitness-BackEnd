@@ -19,7 +19,7 @@ export const decodeJwtToken = (token, secretKey) => {
     const decoded = jwt.verify(token, secretKey);
     return decoded;
   } catch (error) {
-    console.log("Error decoding JWT token:", error.message, error);
+    console.log("Error decoding JWT token:" /* , error.message, error */);
     return null;
   }
 };

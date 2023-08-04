@@ -1,7 +1,7 @@
 import { productService } from "../service/index.js";
-import { OK } from "../utils/httpReponses.js";
+import { CREATED, OK } from "../utils/httpReponses.js";
 export default class ProductController {
-  async getProducts(req, res) {
+  async getPaginatedProducts(req, res, next) {
     try {
       const queryLimit = req.query.limit || 10;
       const queryPage = req.query.page || 1;
@@ -24,8 +24,8 @@ export default class ProductController {
         queryPage,
         querySort
       );
-      return res.status(200).send({
-        status: "200",
+
+      return res.status(OK).send({
         payload: docs,
         totalPages,
         prevPage,
@@ -35,69 +35,55 @@ export default class ProductController {
         hasNextPage,
       });
     } catch (error) {
-      console.log(error);
-      return res
-        .status(500)
-        .send({ status: "500", error: "internal server error" });
+      return next(error);
     }
   }
 
-  createProduct(req, res) {
+  async createProduct(req, res, next) {
     try {
       const product = req.body;
-      productService.addProduct(product);
-      return res.sendStatus(201);
+      const createdProduct = await productService.addProduct(product);
+      return res.status(CREATED).send({ payload: createdProduct });
     } catch (error) {
-      console.log(error);
-      return res.status(500).send({ error: "Internal Server Error" });
+      /* Se envia el error al middleware centralizado de manejo de errores "errorHandler" */
+      return next(error);
     }
   }
 
-  async getProductById(req, res) {
+  async getProductById(req, res, next) {
     try {
-      console.log(req.params.productId);
       const product = await productService.getProductById(req.params.productId);
-      return res.status(200).send({ status: "success", payload: product });
+      return res.status(OK).send({ payload: product });
     } catch (error) {
-      console.log(error);
-      return res.status(500).send({ error: "internal server error" });
+      return next(error);
     }
   }
 
-  async updateProduct(req, res) {
+  async updateProduct(req, res, next) {
     try {
       const updatedProduct = await productService.updateProduct(
         req.params.productId,
         req.body
       );
-
-      res.status(200).send({
+      res.status(OK).send({
         message: "Product updated successfully",
-        status: "success",
+        status: OK,
       });
     } catch (error) {
-      console.log(error);
-      return res.status(500).send({ error: "internal server error" });
+      return next(error);
     }
   }
 
-  async deleteProduct(req, res) {
+  async deleteProduct(req, res, next) {
     try {
       const deletedProduct = await productService.deleteProduct(
         req.params.productId
       );
       return res
-        .status(200)
-        .send({ status: "success", message: "Product deleted successfully" });
+        .status(OK)
+        .send({ status: OK, message: "Product deleted successfully" });
     } catch (error) {
-      console.log(error);
-      return res.status(500).send({ error: "internal server error" });
+      return next(error);
     }
-  }
-
-  mocking(req, res) {
-    console.log("mocking");
-    const mockedProducts = productService.getMockedProducts();
-    res.status(OK).send(mockedProducts);
   }
 }

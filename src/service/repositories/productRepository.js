@@ -1,6 +1,6 @@
 import productModel from "../../dao/mongo/models/productModel.js";
 export default class ProductRepository {
-  async getProducts(queryLimit, queryPage, querySort) {
+  async getPaginatedProducts(queryLimit, queryPage, querySort) {
     const options = {
       limit: queryLimit,
       page: queryPage,
@@ -10,7 +10,10 @@ export default class ProductRepository {
     const products = await productModel.paginate({}, options);
     return products;
   }
-
+  async getProducts(filters) {
+    const products = await productModel.find();
+    return products;
+  }
   async getProductById(id) {
     try {
       const product = await productModel.findById(id).lean();
@@ -41,8 +44,8 @@ export default class ProductRepository {
     return exists ? true : false;
   }
   async validateId(id) {
-    const exists = await productModel.exists(id);
-    return exists ? true : false;
+    const isValid = await productModel.isIdValid(id);
+    return isValid;
   }
   async compareIds(id1, id2) {
     const result = await productModel.equals(id1, id2);

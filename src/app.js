@@ -13,6 +13,7 @@ import TestRouter from "./routes/testRouter.js";
 import passportInit from "./config/passport.js";
 
 import __dirname from "./path.js";
+import handleUncaughtError from "./middlewares/errorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -44,6 +45,4 @@ app.use("/api/sessions", sessionRouter.getRouter());
 app.use("/api/test", testRouter.getRouter());
 app.use("/", viewRouter.getRouter());
 
-app.use((err, req, res, next) => {
-  return res.status(res.errorCode || 500).send({ error: err.message });
-});
+app.use(handleUncaughtError);
