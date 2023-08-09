@@ -22,42 +22,47 @@ export class BaseRouter {
     this.router.delete(path, this.applyCallBacks(callbacks));
   }
   handlePolicies(policies) {
-    return (req, res, next) => {
-      if (policies.includes("PUBLIC")) {
-        const user = this.getCurrentUser(req);
-        if (user) {
-          req.user = user;
-          return res.redirect("/products");
-        }
-        return next();
-      }
-      if (policies.includes("AUTHENTICATED")) {
-        const user = this.getCurrentUser(req);
-        if (!user) {
-          return res.redirect("/");
-        }
-        req.user = user;
-        return next();
-      }
-      if (policies.includes("ADMIN")) {
-        const user = this.getCurrentUser(req);
-        if (!user || user.role.toUpperCase() != "ADMIN") {
-          return res.redirect("/");
-        }
-        req.user = user;
-        return next();
-      }
-      if (policies.includes("USER")) {
-        const user = this.getCurrentUser(req);
+    try {
+      return (req, res, next) => {
+        if (policies.includes("PUBLIC")) {
+          const user = this.getCurrentUser(req);
+          if (user) {
+            req.user = user;
+            return res.redirect("/products");
+          }
 
-        if (!user || user.role.toUpperCase() != "USER") {
-          return res.redirect("/");
+          return next();
         }
-        req.user = user;
-        return next();
-      }
-      next();
-    };
+        if (policies.includes("AUTHENTICATED")) {
+          const user = this.getCurrentUser(req);
+          if (!user) {
+            return res.redirect("/");
+          }
+          req.user = user;
+          return next();
+        }
+        if (policies.includes("ADMIN")) {
+          const user = this.getCurrentUser(req);
+          if (!user || user.role.toUpperCase() != "ADMIN") {
+            return res.redirect("/");
+          }
+          req.user = user;
+          return next();
+        }
+        if (policies.includes("USER")) {
+          const user = this.getCurrentUser(req);
+
+          if (!user || user.role.toUpperCase() != "USER") {
+            return res.redirect("/");
+          }
+          req.user = user;
+          return next();
+        }
+        next();
+      };
+    } catch (error) {
+      return next(error);
+    }
   }
   getCurrentUser(req) {
     const token = cookieExtractor(req);

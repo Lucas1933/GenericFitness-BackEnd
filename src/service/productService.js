@@ -2,7 +2,7 @@ import {
   InvalidProductFieldError,
   ExistentProductCodeError,
   InvalidProductIdError,
-} from "./error/ProductErrors.js";
+} from "./error/ProductError.js";
 export default class ProductService {
   constructor(repository) {
     this.repository = repository;

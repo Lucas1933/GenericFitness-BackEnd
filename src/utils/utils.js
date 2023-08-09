@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-
+import bcrypt from "bcrypt";
 export const generateToken = (user) => {
   const payload = user;
   const token = jwt.sign(payload, process.env.JWT_KEY, {
@@ -29,4 +29,10 @@ export const generateCookie = (res, token) => {
     maxAge: 24 * 60 * 60 * 1000 /*  10 * 1000 */,
   };
   res.cookie("token", token, cookieOptions);
+};
+
+export const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  return hashedPassword;
 };

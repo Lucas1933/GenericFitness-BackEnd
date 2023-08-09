@@ -2,10 +2,10 @@ import passport from "passport";
 import local from "passport-local";
 import gitHub from "passport-github2";
 import { ExtractJwt, Strategy } from "passport-jwt";
-
 import bcrypt from "bcrypt";
+
 import { cartService, sessionService } from "../service/index.js";
-import { cookieExtractor } from "../utils/utils.js";
+import { cookieExtractor, hashPassword } from "../utils/utils.js";
 import { CONFLICT, UNAUTHORIZED } from "../utils/httpReponses.js";
 
 const LocalStrategy = local.Strategy;
@@ -21,33 +21,28 @@ const passportInit = () => {
       { usernameField: "email", passReqToCallback: true },
       async (req, email, password, done) => {
         try {
-          const { firstName, lastName } = req.body;
-          const dbUser = await sessionService.getUser(email);
-
+          const dbUser = await sessionService.getUser(req.body.email);
           if (dbUser) {
             return done(null, false, {
-              message: "email already registered",
+              message: "user email already registered",
               status: CONFLICT,
             });
-          } else {
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
-            const cart = await cartService.createCart();
-
-            const user = {
-              firstName,
-              lastName,
-              email,
-              role: "user",
-              cart: cart._id,
-              password: hashedPassword,
-            };
-            const insertedUser = await sessionService.createUser(user);
-
-            return done(null, insertedUser);
           }
+          const { firstName, lastName } = req.body;
+          const hashedPassword = await hashPassword(password);
+          const cart = await cartService.createCart();
+          const user = {
+            firstName,
+            lastName,
+            email,
+            role: "user",
+            cart: cart._id,
+            password: hashedPassword,
+          };
+          const insertedUser = await sessionService.createUser(user);
+          return done(null, insertedUser);
         } catch (error) {
-          console.log(error);
+          return done(error);
         }
       }
     )
@@ -73,20 +68,19 @@ const passportInit = () => {
               message: "user credentials incorrect",
               status: UNAUTHORIZED,
             });
-          } else {
-            const isValidPassword = await bcrypt.compare(
-              password,
-              dbUser.password
-            );
-            if (isValidPassword) {
-              return done(null, dbUser);
-            } else {
-              return done(null, false, {
-                message: "user credentials incorrect",
-                status: UNAUTHORIZED,
-              });
-            }
           }
+          const isValidPassword = await bcrypt.compare(
+            password,
+            dbUser.password
+          );
+          if (isValidPassword) {
+            return done(null, dbUser);
+          }
+
+          return done(null, false, {
+            message: "user credentials incorrect",
+            status: UNAUTHORIZED,
+          });
         } catch (error) {
           console.log(error);
         }
