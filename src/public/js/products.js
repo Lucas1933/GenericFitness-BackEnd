@@ -86,24 +86,10 @@ addToCartBtns.forEach((eachBtn) => {
 
 checkCartBtn.addEventListener("click", async (event) => {
   event.preventDefault();
-  let result = await fetch("/api/carts", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const parsedResult = await result.json();
-  const cartId = parsedResult.payload._id;
-  result = await fetch(`/api/carts/${cartId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(cart.products),
-  });
-  checkCartBtn.setAttribute("href", `/carts/${cartId}`);
+
+  /*  checkCartBtn.setAttribute("href", `/carts/${cartId}`);
   localStorage.setItem("cartId", cartId);
-  window.open(`/carts/${cartId}`, "_blank");
+  window.open(`/carts/${cartId}`, "_blank"); */
 });
 
 clearStorageBtn.addEventListener("click", (event) => {

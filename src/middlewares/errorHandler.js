@@ -3,22 +3,30 @@ import {
   ExistentProductCodeError,
   InvalidProductFieldError,
   InvalidProductIdError,
+  NonExistentProductError,
 } from "../service/error/ProductError.js";
 import {
   InvalidUserFieldError,
   ExistentUserEmailError,
 } from "../service/error/UserError.js";
-/* Mapeo la instancia del error (key) con su respectivo metodo get (value) encargado de construir 
+import {
+  InvalidCartIdError,
+  NonExistentCartError,
+} from "../service/error/CartError.js";
+/* Mapeo la instancia del error (key) con su respectivo metodo getError (value) encargado de construir 
   la respuesta
 */
 const errorHandlersMap = new Map([
   [ExistentProductCodeError, ExistentProductCodeError.prototype.getError],
   [InvalidProductFieldError, InvalidProductFieldError.prototype.getError],
   [InvalidProductIdError, InvalidProductIdError.prototype.getError],
+  [NonExistentProductError, NonExistentProductError.prototype.getError],
   [InvalidUserFieldError, InvalidUserFieldError.prototype.getError],
   [ExistentUserEmailError, ExistentUserEmailError.prototype.getError],
+  [InvalidCartIdError, InvalidCartIdError.prototype.getError],
+  [NonExistentCartError, NonExistentCartError.prototype.getError],
 ]);
-export default function errorHanlder(err, req, res, next) {
+export default function errorHandler(err, req, res, next) {
   /* Obtengo el metodo mapeado con la instancia del error que llega al middleware*/
   const errorHandlerFunc = errorHandlersMap.get(err.constructor);
   if (errorHandlerFunc) {

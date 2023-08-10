@@ -43,7 +43,7 @@ export default class ProductRepository {
     const exists = await productModel.exists({ code: code });
     return exists ? true : false;
   }
-  async validateId(id) {
+  async isIdValid(id) {
     const isValid = await productModel.isIdValid(id);
     return isValid;
   }

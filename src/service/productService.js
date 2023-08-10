@@ -2,6 +2,7 @@ import {
   InvalidProductFieldError,
   ExistentProductCodeError,
   InvalidProductIdError,
+  NonExistentProductError,
 } from "./error/ProductError.js";
 export default class ProductService {
   constructor(repository) {
@@ -25,29 +26,12 @@ export default class ProductService {
     return products;
   }
   async getProductById(id) {
-    /* se valida que la mongo ID sea valida */
-    const isValidId = await this.repository.validateId(id);
-    if (!isValidId) {
-      throw new InvalidProductIdError(
-        `the id ${id} is invalid or not longer exists`
-      );
-    }
+    await this.isIdAndProductValid(id);
     const product = await this.repository.getProductById(id);
-    /*si la ID es valida entonces buscamos el producto, pero de no existir nuevamente lanzamos el error */
-    if (!product) {
-      throw new InvalidProductIdError(
-        `the id ${id} is invalid or not longer exists`
-      );
-    }
     return product;
   }
   async updateProduct(id, product) {
-    const isValidId = await this.repository.validateId(id);
-    if (!isValidId) {
-      throw new InvalidProductIdError(
-        `the id ${id} is invalid or not longer exists`
-      );
-    }
+    await this.isIdAndProductValid(id);
     /* en esta implementacion es necesario recibir todos los campos inclusive los que no
     vayan a ser updateados */
     await this.validateProductFields(product);
@@ -55,12 +39,7 @@ export default class ProductService {
     return updatedProduct;
   }
   async deleteProduct(id) {
-    const isValidId = await this.repository.validateId(id);
-    if (!isValidId) {
-      throw new InvalidProductIdError(
-        `the id ${id} is invalid or not longer exists`
-      );
-    }
+    await this.isIdAndProductValid(id);
     const deletedProduct = await this.repository.deleteProduct(id);
     return deletedProduct;
   }
@@ -96,6 +75,20 @@ export default class ProductService {
     if (!stock) {
       throw new InvalidProductFieldError(
         "Stock is required and it has to be of type Integer"
+      );
+    }
+  }
+  async isIdAndProductValid(id) {
+    /* se valida que la mongo ID sea valida */
+    const isValid = await this.repository.isIdValid(id);
+    if (!isValid) {
+      throw new InvalidProductIdError(`the product id ${id} is invalid`);
+    }
+    const product = await this.repository.getProductById(id);
+    /*si la ID es valida entonces buscamos el producto, pero de no existir lanzamos un error */
+    if (!product) {
+      throw new NonExistentProductError(
+        `the product with id ${id} does not exists`
       );
     }
   }

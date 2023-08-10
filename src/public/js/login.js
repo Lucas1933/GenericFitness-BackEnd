@@ -21,7 +21,9 @@ form.addEventListener("submit", async (event) => {
     const parsedResponse = await response.json();
     if (response.status == 200) {
       window.location.replace(parsedResponse.redirect);
-    } else if (response.status == 401) {
+    }
+
+    if (response.status == 401) {
       loginStatus.innerHTML = parsedResponse.message;
     }
   } catch (error) {

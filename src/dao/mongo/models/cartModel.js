@@ -22,4 +22,7 @@ const schema = new mongoose.Schema(
 );
 
 const cartModel = mongoose.model(collection, schema);
+cartModel.isIdValid = async function (id) {
+  return mongoose.Types.ObjectId.isValid(id);
+};
 export default cartModel;

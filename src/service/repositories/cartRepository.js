@@ -1,5 +1,4 @@
 import cartModel from "../../dao/mongo/models/cartModel.js";
-import { productService } from "../index.js";
 export default class CartRepository {
   async createCart() {
     const createdCart = await cartModel.create(undefined);
@@ -22,7 +21,7 @@ export default class CartRepository {
     return updatedCart;
   }
 
-  async getCart(id) {
+  async getCartById(id) {
     const cart = await cartModel
       .findById(id)
       .lean()
@@ -87,5 +86,9 @@ export default class CartRepository {
       products.push(eachProduct.product._id)
     );
     return products;
+  }
+  async isIdValid(id) {
+    const result = await cartModel.isIdValid(id);
+    return result;
   }
 }

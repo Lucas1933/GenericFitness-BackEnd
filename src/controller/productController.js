@@ -26,6 +26,7 @@ export default class ProductController {
       );
 
       return res.status(OK).send({
+        status: OK,
         payload: docs,
         totalPages,
         prevPage,
@@ -35,7 +36,7 @@ export default class ProductController {
         hasNextPage,
       });
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 
@@ -43,19 +44,21 @@ export default class ProductController {
     try {
       const product = req.body;
       const createdProduct = await productService.addProduct(product);
-      return res.status(CREATED).send({ payload: createdProduct });
+      return res
+        .status(CREATED)
+        .send({ status: CREATED, payload: createdProduct });
     } catch (error) {
       /* Se envia el error al middleware centralizado de manejo de errores "errorHandler" */
-      return next(error);
+      next(error);
     }
   }
 
   async getProductById(req, res, next) {
     try {
       const product = await productService.getProductById(req.params.productId);
-      return res.status(OK).send({ payload: product });
+      return res.status(OK).send({ status: OK, payload: product });
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 
@@ -70,7 +73,7 @@ export default class ProductController {
         status: OK,
       });
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 
@@ -83,7 +86,7 @@ export default class ProductController {
         .status(OK)
         .send({ status: OK, message: "Product deleted successfully" });
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 }

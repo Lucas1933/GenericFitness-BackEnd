@@ -12,14 +12,14 @@ export default class SessionRouter extends BaseRouter {
     this.post(
       "/login",
       this.handlePolicies(["PUBLIC"]),
-      validateUserLoginFields,
+      validateUserLoginFields /* por el funcionamiento de passport fue necesario verificar que no vinieran vacios el email y la password */,
       passportCall("login"),
       sessionController.logUser
     );
     this.post(
       "/register",
       this.handlePolicies(["PUBLIC"]),
-      validateUserRegisterFields,
+      validateUserRegisterFields /* por el funcionamiento de passport fue necesario verificar que no vinieran vacios el email y la password */,
       passportCall("register"),
       sessionController.registerUser
     );

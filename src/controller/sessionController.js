@@ -1,43 +1,47 @@
-import { sessionService } from "../service/index.js";
+import { sessionService, cartService } from "../service/index.js";
 import { CREATED, OK } from "../utils/httpReponses.js";
 
 export default class SessionController {
   constructor() {}
 
-  logUser(req, res) {
+  logUser(req, res, next) {
     try {
       sessionService.generateTokenAndCookie(req.user, res);
       res.status(OK).send({
-        status: "sucess",
+        status: OK,
         message: "user validated correctly",
         redirect: "/products",
       });
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   }
-  registerUser(req, res) {
-    sessionService.generateTokenAndCookie(req.user, res);
-    res.status(CREATED).send({
-      status: "created",
-      message: "user registered correctly",
-      redirection: "/products",
-    });
+  async registerUser(req, res, next) {
+    try {
+      const user = req.user;
+      const createdCart = await cartService.createCart();
+      user.cart = createdCart._id;
+      const insertedUser = await sessionService.createUser(user);
+      sessionService.generateTokenAndCookie(insertedUser, res);
+      res.status(CREATED).send({
+        status: CREATED,
+        message: "user registered correctly",
+        redirection: "/products",
+      });
+    } catch (error) {
+      next(error);
+    }
   }
   githubLogin(req, res) {
     sessionService.generateTokenAndCookie(req.user, res);
     res.redirect("/products");
   }
-  logOutUser(req, res) {
-    res.clearCookie("token");
-    res.status(OK).send({ message: "Logout successful" });
-  }
-  isUserRegistered(req, res, next) {
-    const email = req.body.email;
-    const exists = sessionService.getUser(email);
-    if (exists) {
-      return res.status(409).send({ error: "Email already exists" });
+  logOutUser(req, res, next) {
+    try {
+      res.clearCookie("token");
+      res.status(OK).send({ status: OK, message: "Logout successful" });
+    } catch (error) {
+      next(error);
     }
-    next();
   }
 }

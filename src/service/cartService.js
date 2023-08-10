@@ -1,4 +1,5 @@
 import { productService } from "./index.js";
+import { InvalidCartIdError, NonExistentCartError } from "./error/CartError.js";
 export default class CartService {
   constructor(repository) {
     this.repository = repository;
@@ -8,14 +9,21 @@ export default class CartService {
     return carts;
   }
   async getCartById(id) {
+    await this.isIdAndCartValid(id);
     const cart = await this.repository.getCart(id);
     return cart;
   }
   async createCart() {
-    const createdCart = await this.repository.createCart();
-    return createdCart;
+    try {
+      const createdCart = await this.repository.createCart();
+      return createdCart;
+    } catch (error) {
+      throw error;
+    }
   }
   async addProduct(cartId, productId) {
+    await this.isIdAndCartValid(cartId);
+    await productService.isIdAndProductValid(productId);
     const updatedCart = await this.repository.addProduct(cartId, productId);
     return updatedCart;
   }
@@ -63,5 +71,17 @@ export default class CartService {
     }
 
     return amount;
+  }
+  async isIdAndCartValid(id) {
+    /* se valida que la mongo ID sea valida */
+    const isValid = await this.repository.isIdValid(id);
+    if (!isValid) {
+      throw new InvalidCartIdError(`the cart id ${id} is invalid`);
+    }
+    const cart = await this.repository.getCartById(id);
+    /*si la ID es valida entonces buscamos el producto, pero de no existir lanzamos un error */
+    if (!cart) {
+      throw new NonExistentCartError(`the cart with id ${id} does not exists`);
+    }
   }
 }

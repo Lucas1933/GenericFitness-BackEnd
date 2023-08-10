@@ -1,0 +1,24 @@
+import { BAD_REQUEST, NOT_FOUND } from "../../utils/httpReponses.js";
+
+export class InvalidCartIdError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "InvalidCartIdError";
+    this.status = BAD_REQUEST;
+  }
+
+  getError() {
+    return { status: this.status, error: this.name, message: this.message };
+  }
+}
+export class NonExistentCartError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NonExistentCartError";
+    this.status = NOT_FOUND;
+  }
+
+  getError() {
+    return { status: this.status, error: this.name, message: this.message };
+  }
+}

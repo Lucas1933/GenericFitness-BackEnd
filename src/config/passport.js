@@ -21,7 +21,7 @@ const passportInit = () => {
       { usernameField: "email", passReqToCallback: true },
       async (req, email, password, done) => {
         try {
-          const dbUser = await sessionService.getUser(req.body.email);
+          const dbUser = await sessionService.getUser(email);
           if (dbUser) {
             return done(null, false, {
               message: "user email already registered",
@@ -30,17 +30,14 @@ const passportInit = () => {
           }
           const { firstName, lastName } = req.body;
           const hashedPassword = await hashPassword(password);
-          const cart = await cartService.createCart();
           const user = {
             firstName,
             lastName,
             email,
             role: "user",
-            cart: cart._id,
             password: hashedPassword,
           };
-          const insertedUser = await sessionService.createUser(user);
-          return done(null, insertedUser);
+          return done(null, user);
         } catch (error) {
           return done(error);
         }

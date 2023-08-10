@@ -22,9 +22,14 @@ form.addEventListener("submit", async (event) => {
 
     if (response.status == 201) {
       window.location.replace(parsedResponse.redirection);
-    } else if (response.status == 409) {
+    }
+    if (response.status == 400) {
       registerFail.innerHTML = parsedResponse.message;
-    } else if (response.status == 500) {
+    }
+    if (response.status == 409) {
+      registerFail.innerHTML = parsedResponse.message;
+    }
+    if (response.status == 500) {
       document.body.innerHTML = "500 internal server error";
     }
   } catch (error) {

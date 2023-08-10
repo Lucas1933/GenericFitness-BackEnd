@@ -4,7 +4,7 @@ export default class ViewService {
   }
   getCart(id) {}
   async getProducts(queryLimit, queryPage, querySort) {
-    const products = await this.repository.getProducts(
+    const products = await this.repository.getPaginatedProducts(
       queryLimit,
       queryPage,
       querySort

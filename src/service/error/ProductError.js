@@ -1,4 +1,4 @@
-import { BAD_REQUEST, CONFLICT } from "../../utils/httpReponses.js";
+import { BAD_REQUEST, CONFLICT, NOT_FOUND } from "../../utils/httpReponses.js";
 export class ExistentProductCodeError extends Error {
   constructor(message) {
     super(message);
@@ -27,6 +27,17 @@ export class InvalidProductIdError extends Error {
     this.name = "InvalidProductIdError";
     this.status = BAD_REQUEST;
   }
+  getError() {
+    return { status: this.status, error: this.name, message: this.message };
+  }
+}
+export class NonExistentProductError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NonExistentProductError";
+    this.status = NOT_FOUND;
+  }
+
   getError() {
     return { status: this.status, error: this.name, message: this.message };
   }
