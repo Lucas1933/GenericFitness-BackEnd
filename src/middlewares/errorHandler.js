@@ -12,6 +12,7 @@ import {
 import {
   InvalidCartIdError,
   NonExistentCartError,
+  InvalidCartProductQuantityError,
 } from "../service/error/CartError.js";
 /* Mapeo la instancia del error (key) con su respectivo metodo getError (value) encargado de construir 
   la respuesta
@@ -25,6 +26,10 @@ const errorHandlersMap = new Map([
   [ExistentUserEmailError, ExistentUserEmailError.prototype.getError],
   [InvalidCartIdError, InvalidCartIdError.prototype.getError],
   [NonExistentCartError, NonExistentCartError.prototype.getError],
+  [
+    InvalidCartProductQuantityError,
+    InvalidCartProductQuantityError.prototype.getError,
+  ],
 ]);
 export default function errorHandler(err, req, res, next) {
   /* Obtengo el metodo mapeado con la instancia del error que llega al middleware*/

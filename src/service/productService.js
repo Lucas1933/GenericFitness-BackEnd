@@ -32,9 +32,7 @@ export default class ProductService {
   }
   async updateProduct(id, product) {
     await this.isIdAndProductValid(id);
-    /* en esta implementacion es necesario recibir todos los campos inclusive los que no
-    vayan a ser updateados */
-    await this.validateProductFields(product);
+    await this.validateProductFields(product, { isUpdate: true });
     const updatedProduct = await this.repository.updateProduct(id, product);
     return updatedProduct;
   }
@@ -48,31 +46,37 @@ export default class ProductService {
     return result;
   }
 
-  async validateProductFields({ title, price, stock, code, id, _id }) {
-    if (id || _id) {
-      throw new InvalidProductFieldError("The product cannot have a custom id");
-    }
-    if (!code || code.length == 0) {
-      throw new InvalidProductFieldError(
-        "Code is required and it has to be of type String"
-      );
-    } else {
-      const exists = await this.repository.validateCode(code);
-      if (exists)
-        throw new ExistentProductCodeError(`the code ${code} already exists`);
+  async validateProductFields({ title, price, stock, code, id, _id }, options) {
+    /* si isUpdate = true entonces no se valida ni el id ni el code */
+    if (!options.isUpdate) {
+      if (id || _id) {
+        throw new InvalidProductFieldError(
+          "The product cannot have a custom id"
+        );
+      }
+      /* habria que validar que el codigo que venga sea igual al de la DB o en caso de ser cambiado no genere conflicto con alguno existente, esto en caso de update */
+      if (typeof code != "string" || code.length == 0) {
+        throw new InvalidProductFieldError(
+          "Code is required and it has to be of type String"
+        );
+      } else {
+        const exists = await this.repository.validateCode(code);
+        if (exists)
+          throw new ExistentProductCodeError(`the code ${code} already exists`);
+      }
     }
 
-    if (!title || title.length == 0) {
+    if (typeof title != "string" || title.length == 0) {
       throw new InvalidProductFieldError(
         "Title is required and it has to be of type String"
       );
     }
-    if (!price) {
+    if (typeof price != "number") {
       throw new InvalidProductFieldError(
         "Price is required and it has to be of type Number"
       );
     }
-    if (!stock) {
+    if (!Number.isInteger(stock)) {
       throw new InvalidProductFieldError(
         "Stock is required and it has to be of type Integer"
       );

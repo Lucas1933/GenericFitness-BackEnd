@@ -107,7 +107,9 @@ export default class CartController {
       const unavailableProducts = await cartService.getProductsIds(
         req.params.cartId
       );
-      /* send ticket to user*/
+
+      /* send ticket to user by email*/
+
       res.status(OK).send({
         status: OK,
         message: "purchase completed",
@@ -117,15 +119,16 @@ export default class CartController {
       next(error);
     }
   }
-  deleteProduct(req, res, next) {
+  async deleteProduct(req, res, next) {
     try {
-      const cart = cartService.removeProduct(
+      const cart = await cartService.removeProduct(
         req.params.cartId,
         req.params.productId
       );
-      return res
-        .status(OK)
-        .send({ status: OK, message: "product deleted sucessfully" });
+      return res.status(OK).send({
+        status: OK,
+        message: "product removed from the cart sucessfully",
+      });
     } catch (error) {
       next(error);
     }

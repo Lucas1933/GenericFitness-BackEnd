@@ -22,3 +22,14 @@ export class NonExistentCartError extends Error {
     return { status: this.status, error: this.name, message: this.message };
   }
 }
+export class InvalidCartProductQuantityError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "InvalidCartProductQuantityError";
+    this.status = BAD_REQUEST;
+  }
+
+  getError() {
+    return { status: this.status, error: this.name, message: this.message };
+  }
+}
