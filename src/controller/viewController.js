@@ -18,15 +18,7 @@ export default class ViewController {
   }
   renderNewPassword(req, res, next) {
     try {
-      const token = req.params.token;
-      const decodedToken = decodeJwtToken(token, process.env.JWT_KEY);
-      if (!decodedToken) {
-        res
-          .status(UNAUTHORIZED)
-          .send("The verification link expired, redirecting to login");
-      } else {
-        res.render("newpassword");
-      }
+      res.render("newpassword");
     } catch (error) {
       next(error);
     }

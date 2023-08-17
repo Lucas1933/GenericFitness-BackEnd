@@ -66,9 +66,16 @@ export class BaseRouter {
     }
   }
   getCurrentUser(req) {
-    const token = cookieExtractor(req);
-    const user = decodeJwtToken(token, process.env.JWT_KEY);
-    return user;
+    try {
+      const token = cookieExtractor(req);
+      if (!token) {
+        return null;
+      }
+      const user = decodeJwtToken(token, process.env.JWT_KEY);
+      return user;
+    } catch (error) {
+      return null;
+    }
   }
   applyCallBacks(callbacks) {
     return callbacks.map((callbacks) => async (...params) => {

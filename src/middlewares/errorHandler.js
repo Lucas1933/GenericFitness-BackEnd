@@ -9,12 +9,14 @@ import {
   InvalidUserFieldError,
   ExistentUserEmailError,
   NotRegisteredUserEmailError,
+  AlreadyUsedPasswordError,
 } from "../service/error/UserError.js";
 import {
   InvalidCartIdError,
   NonExistentCartError,
   InvalidCartProductQuantityError,
 } from "../service/error/CartError.js";
+import { ExpiredTokenError } from "../service/error/TokenError.js";
 /* Mapeo la instancia del error (key) con su respectivo metodo getError (value) encargado de construir 
   la respuesta
 */
@@ -28,6 +30,7 @@ const errorHandlersMap = new Map([
   [InvalidUserFieldError, InvalidUserFieldError.prototype.getError],
   [ExistentUserEmailError, ExistentUserEmailError.prototype.getError],
   [NotRegisteredUserEmailError, NotRegisteredUserEmailError.prototype.getError],
+  [AlreadyUsedPasswordError, AlreadyUsedPasswordError.prototype.getError],
   /* carts related errors */
   [InvalidCartIdError, InvalidCartIdError.prototype.getError],
   [NonExistentCartError, NonExistentCartError.prototype.getError],
@@ -35,6 +38,8 @@ const errorHandlersMap = new Map([
     InvalidCartProductQuantityError,
     InvalidCartProductQuantityError.prototype.getError,
   ],
+  /* token related errors */
+  [ExpiredTokenError, ExpiredTokenError.prototype.getError],
 ]);
 export default function errorHandler(err, req, res, next) {
   /* Obtengo el metodo mapeado con la instancia del error que llega al middleware*/

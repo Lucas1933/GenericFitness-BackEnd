@@ -1,7 +1,6 @@
 const form = document.getElementById("loginForm");
 const loginBtn = form.lastElementChild;
 const loginStatus = document.getElementById("loginStatus");
-const tokenBtn = document.getElementById("token");
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = new FormData(form);

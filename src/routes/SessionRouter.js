@@ -38,6 +38,8 @@ export default class SessionRouter extends BaseRouter {
       this.handlePolicies(["PUBLIC"]),
       sessionController.restoreUserPassword
     );
+    this.post("/createpassword", sessionController.createNewPassword);
+    this.post("/verifytoken", sessionController.verifyToken);
     this.delete("/logout", sessionController.logOutUser);
   }
 }

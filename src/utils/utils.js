@@ -1,12 +1,13 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { ExpiredTokenError } from "../service/error/TokenError.js";
 export const generateToken = (incomingPayload, expiration) => {
   const token = jwt.sign(incomingPayload, process.env.JWT_KEY, {
     expiresIn: expiration,
   });
   return token;
 };
-export const checkTokenExpiration = (token) => {};
+
 export const cookieExtractor = (req) => {
   let token = null;
   if (req && req.cookies) {
@@ -19,8 +20,12 @@ export const decodeJwtToken = (token, secretKey) => {
     const decoded = jwt.verify(token, secretKey);
     return decoded;
   } catch (error) {
-    console.log("Error decoding JWT token:", error.message /* ,error */);
-    return null;
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new ExpiredTokenError("the jwt token has expired");
+    } else {
+      console.log(error);
+      throw error;
+    }
   }
 };
 export const generateCookie = (res, token) => {

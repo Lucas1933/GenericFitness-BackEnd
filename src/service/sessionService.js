@@ -1,10 +1,18 @@
-import { generateCookie, generateToken } from "../utils/utils.js";
+import bcrypt from "bcrypt";
+import {
+  generateCookie,
+  generateToken,
+  decodeJwtToken,
+  hashPassword,
+} from "../utils/utils.js";
 import UserTokenDto from "../dto/userTokenDTO.js";
 import { emailService } from "./index.js";
 import {
+  AlreadyUsedPasswordError,
   InvalidUserFieldError,
   NotRegisteredUserEmailError,
 } from "./error/UserError.js";
+
 export default class SessionService {
   constructor(repository) {
     this.repository = repository;
@@ -33,9 +41,31 @@ export default class SessionService {
         `No account is registered with the email: ${email} `
       );
     }
-    const token = generateToken({}, "10s");
+    const token = generateToken({ userEmail: email }, "1h");
     const link = `http://127.0.0.1:8080/newpassword/${token}`;
     emailService.sendPasswordRestorationEmail(email, link);
+  }
+
+  async createNewUserPassword(token, password) {
+    try {
+      const decodedToken = decodeJwtToken(token, process.env.JWT_KEY);
+      const email = decodedToken.userEmail;
+      const user = await this.getUser(email);
+      const isTheSamePassword = await bcrypt.compare(password, user.password);
+      if (isTheSamePassword) {
+        throw new AlreadyUsedPasswordError(
+          "the new password can not be one used previously"
+        );
+      }
+      const newPassword = await hashPassword(password);
+      user.password = newPassword;
+      await this.repository.updateUser(email, user);
+    } catch (error) {
+      throw error;
+    }
+  }
+  verifyToken(token) {
+    const decodedToken = decodeJwtToken(token, process.env.JWT_KEY);
   }
   /* se recomienda usar libreria de validaciones, estas custom son para practicar */
   validateUserFields({ firstName, lastName, email, password }) {

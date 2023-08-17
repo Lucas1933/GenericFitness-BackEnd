@@ -9,4 +9,8 @@ export default class UserRepository {
   async getUser(email) {
     return await userModel.findOne({ email }).lean();
   }
+
+  async updateUser(email, user) {
+    return await userModel.updateOne({ email }, { password: user.password });
+  }
 }

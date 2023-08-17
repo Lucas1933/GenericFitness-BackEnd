@@ -1,5 +1,5 @@
 import { sessionService, cartService } from "../service/index.js";
-import { CREATED, OK } from "../utils/httpReponses.js";
+import { BAD_REQUEST, CREATED, OK } from "../utils/httpReponses.js";
 
 export default class SessionController {
   constructor() {}
@@ -52,6 +52,30 @@ export default class SessionController {
         status: OK,
         message: "Password restoration email successfully sended",
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async createNewPassword(req, res, next) {
+    try {
+      const token = req.body.token;
+      const passwords = req.body.passwords;
+      if (passwords.password !== passwords.repeatPassword) {
+        return res.status(BAD_REQUEST).send("Passwords do not match");
+      }
+      await sessionService.createNewUserPassword(token, passwords.password);
+      res
+        .status(OK)
+        .send({ status: OK, message: "password restored successfully" });
+    } catch (error) {
+      next(error);
+    }
+  }
+  verifyToken(req, res, next) {
+    try {
+      const token = req.body.token;
+      sessionService.verifyToken(token);
+      res.status(OK).send({ status: OK, message: "token is valid" });
     } catch (error) {
       next(error);
     }
