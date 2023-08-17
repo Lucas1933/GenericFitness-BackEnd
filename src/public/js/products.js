@@ -9,6 +9,7 @@ const addToCartBtns = Array.from(
 );
 
 const checkCartBtn = document.getElementById("checkCart");
+const emptyCartBtn = document.getElementById("emptyCart");
 const cartQuantity = document.getElementById("itemQuantity");
 const logoutBtn = document.getElementById("logoutBtn");
 
@@ -92,8 +93,11 @@ checkCartBtn.addEventListener("click", async (event) => {
   window.open(`/carts/${cartId}`, "_blank"); */
 });
 
-clearStorageBtn.addEventListener("click", (event) => {
-  localStorage.clear();
+emptyCartBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  itemCounter = 0;
+  cartQuantity.innerHTML = itemCounter;
+  localStorage.removeItem("cart");
 });
 
 logoutBtn.addEventListener("click", async (event) => {

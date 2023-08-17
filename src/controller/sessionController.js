@@ -44,4 +44,16 @@ export default class SessionController {
       next(error);
     }
   }
+  async restoreUserPassword(req, res, next) {
+    try {
+      const email = req.body.email;
+      await sessionService.restoreUserPassword(email);
+      res.status(OK).send({
+        status: OK,
+        message: "Password restoration email successfully sended",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

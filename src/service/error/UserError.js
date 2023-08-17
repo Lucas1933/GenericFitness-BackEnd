@@ -1,4 +1,4 @@
-import { BAD_REQUEST, CONFLICT } from "../../utils/httpReponses.js";
+import { BAD_REQUEST, CONFLICT, NOT_FOUND } from "../../utils/httpReponses.js";
 
 export class InvalidUserFieldError extends Error {
   constructor(message) {
@@ -16,6 +16,17 @@ export class ExistentUserEmailError extends Error {
     super(message);
     this.name = "ExistentUserEmailError";
     this.status = CONFLICT;
+  }
+
+  getError() {
+    return { status: this.status, error: this.name, message: this.message };
+  }
+}
+export class NotRegisteredUserEmailError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NotRegisteredUserEmailError";
+    this.status = NOT_FOUND;
   }
 
   getError() {

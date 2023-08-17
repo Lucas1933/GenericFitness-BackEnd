@@ -33,6 +33,11 @@ export default class SessionRouter extends BaseRouter {
       passportCall("github"),
       sessionController.githubLogin
     );
+    this.post(
+      "/restorepassword",
+      this.handlePolicies(["PUBLIC"]),
+      sessionController.restoreUserPassword
+    );
     this.delete("/logout", sessionController.logOutUser);
   }
 }

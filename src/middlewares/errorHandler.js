@@ -8,6 +8,7 @@ import {
 import {
   InvalidUserFieldError,
   ExistentUserEmailError,
+  NotRegisteredUserEmailError,
 } from "../service/error/UserError.js";
 import {
   InvalidCartIdError,
@@ -18,12 +19,16 @@ import {
   la respuesta
 */
 const errorHandlersMap = new Map([
+  /* products related errors */
   [ExistentProductCodeError, ExistentProductCodeError.prototype.getError],
   [InvalidProductFieldError, InvalidProductFieldError.prototype.getError],
   [InvalidProductIdError, InvalidProductIdError.prototype.getError],
   [NonExistentProductError, NonExistentProductError.prototype.getError],
+  /* users related errors */
   [InvalidUserFieldError, InvalidUserFieldError.prototype.getError],
   [ExistentUserEmailError, ExistentUserEmailError.prototype.getError],
+  [NotRegisteredUserEmailError, NotRegisteredUserEmailError.prototype.getError],
+  /* carts related errors */
   [InvalidCartIdError, InvalidCartIdError.prototype.getError],
   [NonExistentCartError, NonExistentCartError.prototype.getError],
   [

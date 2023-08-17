@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-export const generateToken = (user) => {
-  const payload = user;
-  const token = jwt.sign(payload, process.env.JWT_KEY, {
-    expiresIn: "24h" /* "10s" */,
+export const generateToken = (incomingPayload, expiration) => {
+  const token = jwt.sign(incomingPayload, process.env.JWT_KEY, {
+    expiresIn: expiration,
   });
   return token;
 };
+export const checkTokenExpiration = (token) => {};
 export const cookieExtractor = (req) => {
   let token = null;
   if (req && req.cookies) {
@@ -19,7 +19,7 @@ export const decodeJwtToken = (token, secretKey) => {
     const decoded = jwt.verify(token, secretKey);
     return decoded;
   } catch (error) {
-    console.log("Error decoding JWT token:" /* , error.message, error */);
+    console.log("Error decoding JWT token:", error.message /* ,error */);
     return null;
   }
 };

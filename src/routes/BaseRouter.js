@@ -58,6 +58,7 @@ export class BaseRouter {
           req.user = user;
           return next();
         }
+
         next();
       };
     } catch (error) {

@@ -1,6 +1,10 @@
 import { generateCookie, generateToken } from "../utils/utils.js";
 import UserTokenDto from "../dto/userTokenDTO.js";
-import { InvalidUserFieldError } from "./error/UserError.js";
+import { emailService } from "./index.js";
+import {
+  InvalidUserFieldError,
+  NotRegisteredUserEmailError,
+} from "./error/UserError.js";
 export default class SessionService {
   constructor(repository) {
     this.repository = repository;
@@ -14,6 +18,24 @@ export default class SessionService {
     this.validateUserFields(user);
     const createdUser = await this.repository.createUser(user);
     return user;
+  }
+  async restoreUserPassword(email) {
+    /* esto se tiene que refactorizar porque esta horrible */
+    this.validateUserFields({
+      firstName: "_ignore",
+      lastName: "_ignore",
+      email,
+      password: "_ignore",
+    });
+    const user = await this.getUser(email);
+    if (!user) {
+      throw new NotRegisteredUserEmailError(
+        `No account is registered with the email: ${email} `
+      );
+    }
+    const token = generateToken({}, "10s");
+    const link = `http://127.0.0.1:8080/newpassword/${token}`;
+    emailService.sendPasswordRestorationEmail(email, link);
   }
   /* se recomienda usar libreria de validaciones, estas custom son para practicar */
   validateUserFields({ firstName, lastName, email, password }) {
@@ -37,7 +59,7 @@ export default class SessionService {
   }
   generateTokenAndCookie(user, res) {
     const userToken = new UserTokenDto(user);
-    const token = generateToken(userToken.plain());
+    const token = generateToken(userToken.plain(), "24h");
     generateCookie(res, token);
   }
 }

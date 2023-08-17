@@ -1,4 +1,6 @@
 import { viewService } from "../service/index.js";
+import { UNAUTHORIZED } from "../utils/httpReponses.js";
+import { decodeJwtToken } from "../utils/utils.js";
 export default class ViewController {
   renderLogin(req, res) {
     res.render("login");
@@ -11,7 +13,24 @@ export default class ViewController {
     const cart = viewService.getCart(req.params.cartId);
     res.render("carts", { products: cart.products, id: req.params.cartId });
   }
-
+  renderRestore(req, res) {
+    res.render("restore");
+  }
+  renderNewPassword(req, res, next) {
+    try {
+      const token = req.params.token;
+      const decodedToken = decodeJwtToken(token, process.env.JWT_KEY);
+      if (!decodedToken) {
+        res
+          .status(UNAUTHORIZED)
+          .send("The verification link expired, redirecting to login");
+      } else {
+        res.render("newpassword");
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
   async renderProducts(req, res) {
     const queryLimit = req.query.limit || 10;
     const queryPage = req.query.page || 1;

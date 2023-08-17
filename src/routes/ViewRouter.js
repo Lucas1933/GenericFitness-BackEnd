@@ -14,6 +14,12 @@ export default class ViewRouter extends BaseRouter {
       this.handlePolicies(["AUTHENTICATED"]),
       viewController.renderProducts
     );
+    this.get(
+      "/restore",
+      this.handlePolicies(["PUBLIC"]),
+      viewController.renderRestore
+    );
+    this.get("/newpassword/:token", viewController.renderNewPassword);
     this.get("/carts/:cartId", viewController.renderCart);
   }
 }
