@@ -44,3 +44,14 @@ export class AlreadyUsedPasswordError extends Error {
     return { status: this.status, error: this.name, message: this.message };
   }
 }
+export class InvalidUserIdError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "InvalidUserIdError";
+    this.status = BAD_REQUEST;
+  }
+
+  getError() {
+    return { status: this.status, error: this.name, message: this.message };
+  }
+}

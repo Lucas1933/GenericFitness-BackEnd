@@ -44,6 +44,18 @@ export default class UserController {
       next(error);
     }
   }
+
+  async changeUserRole(req, res, next) {
+    try {
+      const id = req.params.userId;
+      await userService.changeUserRole(id);
+      res
+        .status(OK)
+        .send({ status: OK, message: "user role updated successfully" });
+    } catch (error) {
+      next(error);
+    }
+  }
   async restoreUserPassword(req, res, next) {
     try {
       const email = req.body.email;

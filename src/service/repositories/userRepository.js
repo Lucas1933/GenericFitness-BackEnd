@@ -6,11 +6,20 @@ export default class UserRepository {
     return createdUser;
   }
 
-  async getUser(email) {
+  async getUserByEmail(email) {
     return await userModel.findOne({ email }).lean();
   }
+  async getUserById(id) {
+    return await userModel.findById(id);
+  }
 
-  async updateUser(email, user) {
+  async updateUserPassword(email, user) {
     return await userModel.updateOne({ email }, { password: user.password });
+  }
+  async updateUserRole(id, role) {
+    return await userModel.updateOne({ _id: id }, { role: role });
+  }
+  async isIdValid(id) {
+    return await userModel.isIdValid(id);
   }
 }

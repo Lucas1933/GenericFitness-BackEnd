@@ -16,4 +16,7 @@ const schema = new mongoose.Schema(
 );
 
 const userModel = mongoose.model(collection, schema);
+userModel.isIdValid = async function (id) {
+  return mongoose.Types.ObjectId.isValid(id);
+};
 export default userModel;

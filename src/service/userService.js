@@ -10,12 +10,27 @@ import { emailService } from "./index.js";
 import {
   AlreadyUsedPasswordError,
   InvalidUserFieldError,
+  InvalidUserIdError,
   NotRegisteredUserEmailError,
 } from "./error/UserError.js";
 
 export default class UserService {
   constructor(repository) {
     this.repository = repository;
+  }
+  async changeUserRole(id) {
+    const user = await this.validateIdAndUserExistence(id);
+    const currentRole = user.role;
+    let newRole;
+    if (currentRole == "user") {
+      newRole = "premium";
+    } else if (currentRole == "premium") {
+      newRole = "user";
+    } else {
+      console.log("bad admin");
+      /* lanzamos un error porque podria ser un admin queriendo evadir la afip */
+    }
+    await this.repository.updateUserRole(id, newRole);
   }
 
   async getUser(email) {
@@ -91,5 +106,17 @@ export default class UserService {
     const userToken = new UserTokenDto(user);
     const token = generateToken(userToken.plain(), "24h");
     generateCookie(res, token);
+  }
+  async validateIdAndUserExistence(id) {
+    const isValidId = await this.repository.isIdValid(id);
+    if (!isValidId) {
+      throw new InvalidUserIdError(`the user id ${id} is not valid`);
+    }
+    const user = await this.repository.getUserById(id);
+    /* cambiar metodo en repositorio para checkear por la existencia y no recuperarlo de la DB */
+    if (!user) {
+      throw new InvalidUserIdError(`the user with id ${id} does not exists`);
+    }
+    return user;
   }
 }

@@ -38,6 +38,11 @@ export default class UserRouter extends BaseRouter {
       this.handlePolicies(["PUBLIC"]),
       userController.restoreUserPassword
     );
+    this.put(
+      "/premium/:userId",
+      this.handlePolicies(["ADMIN"]),
+      userController.changeUserRole
+    );
     this.post("/createpassword", userController.createNewPassword);
     this.post("/verifytoken", userController.verifyToken);
     this.delete("/logout", userController.logOutUser);
