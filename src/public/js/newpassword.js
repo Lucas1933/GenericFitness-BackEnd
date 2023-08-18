@@ -12,7 +12,7 @@ mainDiv.style.display = "none";
 async function verifyToken(token) {
   try {
     const response = await fetch(
-      `http://127.0.0.1:8080/api/sessions/verifytoken`,
+      `http://127.0.0.1:8080/api/users/verifytoken`,
       {
         method: "POST",
         headers: {
@@ -53,7 +53,7 @@ form.addEventListener("submit", async (event) => {
   } else {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8080/api/sessions/createpassword`,
+        `http://127.0.0.1:8080/api/users/createpassword`,
         {
           method: "POST",
           headers: {

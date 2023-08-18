@@ -43,7 +43,8 @@ export default class ProductController {
   async createProduct(req, res, next) {
     try {
       const product = req.body;
-      const createdProduct = await productService.addProduct(product);
+      const user = req.user;
+      const createdProduct = await productService.addProduct(product, user);
       return res
         .status(CREATED)
         .send({ status: CREATED, payload: createdProduct });

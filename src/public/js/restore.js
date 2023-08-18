@@ -7,7 +7,7 @@ form.addEventListener("submit", async (event) => {
   const data = new FormData(form);
   const email = data.get("email");
   try {
-    const response = await fetch(`api/sessions/restorepassword`, {
+    const response = await fetch(`api/users/restorepassword`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

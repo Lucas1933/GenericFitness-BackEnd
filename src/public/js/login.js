@@ -10,7 +10,7 @@ form.addEventListener("submit", async (event) => {
   }
   const parsedUser = JSON.stringify(user);
   try {
-    const response = await fetch(`api/sessions/login`, {
+    const response = await fetch(`api/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

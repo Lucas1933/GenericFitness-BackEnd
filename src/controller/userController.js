@@ -1,12 +1,12 @@
-import { sessionService, cartService } from "../service/index.js";
+import { userService, cartService } from "../service/index.js";
 import { BAD_REQUEST, CREATED, OK } from "../utils/httpReponses.js";
 
-export default class SessionController {
+export default class UserController {
   constructor() {}
 
   logUser(req, res, next) {
     try {
-      sessionService.generateTokenAndCookie(req.user, res);
+      userService.generateTokenAndCookie(req.user, res);
       res.status(OK).send({
         status: OK,
         message: "user validated correctly",
@@ -21,8 +21,8 @@ export default class SessionController {
       const user = req.user;
       const createdCart = await cartService.createCart();
       user.cart = createdCart._id;
-      const insertedUser = await sessionService.createUser(user);
-      sessionService.generateTokenAndCookie(insertedUser, res);
+      const insertedUser = await userService.createUser(user);
+      userService.generateTokenAndCookie(insertedUser, res);
       res.status(CREATED).send({
         status: CREATED,
         message: "user registered correctly",
@@ -33,7 +33,7 @@ export default class SessionController {
     }
   }
   githubLogin(req, res) {
-    sessionService.generateTokenAndCookie(req.user, res);
+    userService.generateTokenAndCookie(req.user, res);
     res.redirect("/products");
   }
   logOutUser(req, res, next) {
@@ -47,7 +47,7 @@ export default class SessionController {
   async restoreUserPassword(req, res, next) {
     try {
       const email = req.body.email;
-      await sessionService.restoreUserPassword(email);
+      await userService.restoreUserPassword(email);
       res.status(OK).send({
         status: OK,
         message: "Password restoration email successfully sended",
@@ -63,7 +63,7 @@ export default class SessionController {
       if (passwords.password !== passwords.repeatPassword) {
         return res.status(BAD_REQUEST).send("Passwords do not match");
       }
-      await sessionService.createNewUserPassword(token, passwords.password);
+      await userService.createNewUserPassword(token, passwords.password);
       res
         .status(OK)
         .send({ status: OK, message: "password restored successfully" });
@@ -74,7 +74,7 @@ export default class SessionController {
   verifyToken(req, res, next) {
     try {
       const token = req.body.token;
-      sessionService.verifyToken(token);
+      userService.verifyToken(token);
       res.status(OK).send({ status: OK, message: "token is valid" });
     } catch (error) {
       next(error);

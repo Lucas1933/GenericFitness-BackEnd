@@ -5,7 +5,7 @@ import handlebars from "express-handlebars";
 import cookieParser from "cookie-parser";
 
 import ProductRouter from "./routes/productRouter.js";
-import SessionRouter from "./routes/sessionRouter.js";
+import UserRouter from "./routes/userRouter.js";
 import ViewRouter from "./routes/viewRouter.js";
 import CartRouter from "./routes/cartRouter.js";
 import TestRouter from "./routes/testRouter.js";
@@ -33,7 +33,7 @@ app.use(cookieParser(process.env.COOKIE_KEY));
 
 const productRouter = new ProductRouter();
 const viewRouter = new ViewRouter();
-const sessionRouter = new SessionRouter();
+const userRouter = new UserRouter();
 const cartRouter = new CartRouter();
 const testRouter = new TestRouter();
 
@@ -41,7 +41,7 @@ passportInit();
 
 app.use("/api/products", productRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
-app.use("/api/sessions", sessionRouter.getRouter());
+app.use("/api/users", userRouter.getRouter());
 app.use("/api/test", testRouter.getRouter());
 app.use("/", viewRouter.getRouter());
 

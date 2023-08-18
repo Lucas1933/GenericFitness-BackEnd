@@ -102,7 +102,7 @@ emptyCartBtn.addEventListener("click", (event) => {
 
 logoutBtn.addEventListener("click", async (event) => {
   try {
-    let response = await fetch("/api/sessions/logout", {
+    let response = await fetch("/api/users/logout", {
       method: "DELETE",
     });
     const parsedResponse = await response.json();

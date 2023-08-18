@@ -51,14 +51,20 @@ export class BaseRouter {
         }
         if (policies.includes("USER")) {
           const user = this.getCurrentUser(req);
-
           if (!user || user.role.toUpperCase() != "USER") {
             return res.redirect("/");
           }
           req.user = user;
           return next();
         }
-
+        if (policies.includes("PREMIUM")) {
+          const user = this.getCurrentUser(req);
+          if (!user || user.role.toUpperCase() != "PREMIUM") {
+            return res.redirect("/");
+          }
+          req.user = user;
+          return next();
+        }
         next();
       };
     } catch (error) {

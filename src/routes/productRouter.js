@@ -10,7 +10,7 @@ export default class ProductRouter extends BaseRouter {
     );
     this.post(
       "/",
-      this.handlePolicies(["ADMIN"]),
+      this.handlePolicies(["ADMIN", "PREMIUM"]),
       productController.createProduct
     );
     this.get(

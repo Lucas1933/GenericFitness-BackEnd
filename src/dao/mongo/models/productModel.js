@@ -10,6 +10,10 @@ const schema = new mongoose.Schema(
     thumbnail: Array,
     code: String,
     stock: Number,
+    owner: {
+      type: String,
+      default: "admin",
+    },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

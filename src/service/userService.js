@@ -13,7 +13,7 @@ import {
   NotRegisteredUserEmailError,
 } from "./error/UserError.js";
 
-export default class SessionService {
+export default class UserService {
   constructor(repository) {
     this.repository = repository;
   }

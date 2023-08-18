@@ -4,7 +4,7 @@ import gitHub from "passport-github2";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import bcrypt from "bcrypt";
 
-import { cartService, sessionService } from "../service/index.js";
+import { cartService, userService } from "../service/index.js";
 import { cookieExtractor, hashPassword } from "../utils/utils.js";
 import { CONFLICT, UNAUTHORIZED } from "../utils/httpReponses.js";
 
@@ -21,7 +21,7 @@ const passportInit = () => {
       { usernameField: "email", passReqToCallback: true },
       async (req, email, password, done) => {
         try {
-          const dbUser = await sessionService.getUser(email);
+          const dbUser = await userService.getUser(email);
           if (dbUser) {
             return done(null, false, {
               message: "user email already registered",
@@ -59,7 +59,7 @@ const passportInit = () => {
             return done(null, admin);
           }
 
-          const dbUser = await sessionService.getUser(email);
+          const dbUser = await userService.getUser(email);
           if (!dbUser) {
             return done(null, false, {
               message: "user credentials incorrect",
@@ -90,11 +90,11 @@ const passportInit = () => {
       {
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_SECRET,
-        callbackURL: "http://localhost:8080/api/sessions/githubcallback",
+        callbackURL: "http://localhost:8080/api/users/githubcallback",
       },
       async function (accessToken, refreshToken, profile, done) {
         const userEmail = profile._json.email;
-        const existingUser = await sessionService.getUser(userEmail);
+        const existingUser = await userService.getUser(userEmail);
         if (!existingUser) {
           const cart = await cartService.createCart();
           const firstName = profile._json.name;
@@ -106,7 +106,7 @@ const passportInit = () => {
             cart: cart._id,
             password: "",
           };
-          const insertedUser = await sessionService.createUser(user);
+          const insertedUser = await userService.createUser(user);
           return done(null, insertedUser);
         } else {
           return done(null, existingUser);

@@ -16,8 +16,11 @@ export default class ProductService {
     );
     return products;
   }
-  async addProduct(product) {
+  async addProduct(product, user) {
     await this.validateProductFields(product);
+    if (user.role.toUpperCase() == "PREMIUM") {
+      product.owner = user.email;
+    }
     const createdProduct = await this.repository.addProduct(product);
     return createdProduct;
   }
