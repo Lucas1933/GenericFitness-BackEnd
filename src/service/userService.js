@@ -33,8 +33,8 @@ export default class UserService {
     await this.repository.updateUserRole(id, newRole);
   }
 
-  async getUser(email) {
-    const user = await this.repository.getUser(email);
+  async getUserByEmail(email) {
+    const user = await this.repository.getUserByEmail(email);
     return user ? user : null;
   }
   async createUser(user) {
@@ -50,7 +50,7 @@ export default class UserService {
       email,
       password: "_ignore",
     });
-    const user = await this.getUser(email);
+    const user = await this.getUserByEmail(email);
     if (!user) {
       throw new NotRegisteredUserEmailError(
         `No account is registered with the email: ${email} `
@@ -65,7 +65,7 @@ export default class UserService {
     try {
       const decodedToken = decodeJwtToken(token, process.env.JWT_KEY);
       const email = decodedToken.userEmail;
-      const user = await this.getUser(email);
+      const user = await this.getUserByEmail(email);
       const isTheSamePassword = await bcrypt.compare(password, user.password);
       if (isTheSamePassword) {
         throw new AlreadyUsedPasswordError(

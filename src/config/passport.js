@@ -21,7 +21,7 @@ const passportInit = () => {
       { usernameField: "email", passReqToCallback: true },
       async (req, email, password, done) => {
         try {
-          const dbUser = await userService.getUser(email);
+          const dbUser = await userService.getUserByEmail(email);
           if (dbUser) {
             return done(null, false, {
               message: "user email already registered",
@@ -59,7 +59,7 @@ const passportInit = () => {
             return done(null, admin);
           }
 
-          const dbUser = await userService.getUser(email);
+          const dbUser = await userService.getUserByEmail(email);
           if (!dbUser) {
             return done(null, false, {
               message: "user credentials incorrect",
@@ -94,7 +94,7 @@ const passportInit = () => {
       },
       async function (accessToken, refreshToken, profile, done) {
         const userEmail = profile._json.email;
-        const existingUser = await userService.getUser(userEmail);
+        const existingUser = await userService.getUserByEmail(userEmail);
         if (!existingUser) {
           const cart = await cartService.createCart();
           const firstName = profile._json.name;

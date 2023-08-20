@@ -6,17 +6,17 @@ export default class ViewRouter extends BaseRouter {
     this.get("/", this.handlePolicies(["PUBLIC"]), viewController.renderLogin);
     this.get(
       "/register",
-      this.handlePolicies(["PUBLIC"]),
+      this.handlePolicies(["NO_AUTH"]),
       viewController.renderRegister
     );
     this.get(
       "/products",
-      this.handlePolicies(["AUTHENTICATED"]),
+      this.handlePolicies(["USER", "PREMIUM", "ADMIN"]),
       viewController.renderProducts
     );
     this.get(
       "/restore",
-      this.handlePolicies(["PUBLIC"]),
+      this.handlePolicies(["NO_AUTH"]),
       viewController.renderRestore
     );
     this.get("/newpassword/:token", viewController.renderNewPassword);

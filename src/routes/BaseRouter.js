@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { cookieExtractor, decodeJwtToken } from "../utils/utils.js";
+import { FORBIDDEN } from "../utils/httpReponses.js";
 export class BaseRouter {
   constructor() {
     this.router = Router();
@@ -21,51 +22,63 @@ export class BaseRouter {
   delete(path, ...callbacks) {
     this.router.delete(path, this.applyCallBacks(callbacks));
   }
-  handlePolicies(policies) {
+  /* ADMIN,PREMIUM,USER,NO_AUTH,*/
+  handlePolicies(allowedPolicies) {
     try {
       return (req, res, next) => {
-        if (policies.includes("PUBLIC")) {
-          const user = this.getCurrentUser(req);
-          if (user) {
-            req.user = user;
-            return res.redirect("/products");
-          }
+        /* declaro un diccionario que tiene como key los endpoints y como value un objeto que como
+propiedades tiene los roles permitidos por ese endpoint y como valor de esos roles tenemos 
+un array con los http metodos permitidos para ese role */
+        const policiesDictionary = {
+          "/": { NO_AUTH: ["GET"] },
+          "/register": { NO_AUTH: ["GET"] },
+          "/restore": { NO_AUTH: ["GET"] },
+          "/products": {
+            ADMIN: ["GET"],
+            PREMIUM: ["GET"],
+            USER: ["GET"],
+          },
+          "/api/users/login": { NO_AUTH: ["POST"] },
+          "/api/products": {
+            ADMIN: ["GET", "PUT", "POST", "DELETE"],
+            PREMIUM: ["POST"],
+          },
+        };
+        /* Obtengo el user del jwt */
+        const user = this.getCurrentUser(req);
+        const userRole = user ? user.role.toUpperCase() : "NO_AUTH";
+        const requestedHttpMethod = req.method;
+        /* si hay params, con la regexp los removemos para que matcheen la logica de la politica de acceso, caso contrario la url queda original */
+        const requestedEndPoint =
+          Object.keys(req.params).length > 0
+            ? req.originalUrl.replace(/\/[^/]*$/, "")
+            : req.originalUrl;
+        console.log(requestedEndPoint);
+        /* obtengo el objeto con los roles permitidos para el endpoint requesteado */
+        const rolesPermissions = policiesDictionary[requestedEndPoint];
 
-          return next();
-        }
-        if (policies.includes("AUTHENTICATED")) {
-          const user = this.getCurrentUser(req);
-          if (!user) {
-            return res.redirect("/");
+        /* si el rol del usuario matchea con alguno de los rolesPermissions 
+        preguntar si el metodo requestado matchea  con los incluidos en el array  de ese rol.
+        */
+        if (rolesPermissions.hasOwnProperty(userRole)) {
+          const allowedHttpMethods = rolesPermissions[userRole];
+          if (!allowedHttpMethods.includes(requestedHttpMethod)) {
+            /* si el metodo requesteado no se incluye en el array, lanzamos un error indicandolo */
+            return res.status(FORBIDDEN).send({
+              status: FORBIDDEN,
+              message: "Not authorized to request this method",
+            });
+          } else {
+            req.user = user;
+            return next();
           }
-          req.user = user;
-          return next();
+        } else {
+          /* si el rol no se encontro en los permitidos del endpoint entonces lanzamos el error pero diciendo que no tiene acceso al endpoint */
+          return res.status(FORBIDDEN).send({
+            status: FORBIDDEN,
+            message: "Not authorized to access this endpoint",
+          });
         }
-        if (policies.includes("ADMIN")) {
-          const user = this.getCurrentUser(req);
-          if (!user || user.role.toUpperCase() != "ADMIN") {
-            return res.redirect("/");
-          }
-          req.user = user;
-          return next();
-        }
-        if (policies.includes("USER")) {
-          const user = this.getCurrentUser(req);
-          if (!user || user.role.toUpperCase() != "USER") {
-            return res.redirect("/");
-          }
-          req.user = user;
-          return next();
-        }
-        if (policies.includes("PREMIUM")) {
-          const user = this.getCurrentUser(req);
-          if (!user || user.role.toUpperCase() != "PREMIUM") {
-            return res.redirect("/");
-          }
-          req.user = user;
-          return next();
-        }
-        next();
       };
     } catch (error) {
       return next(error);

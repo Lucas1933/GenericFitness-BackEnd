@@ -11,14 +11,14 @@ export default class UserRouter extends BaseRouter {
   init() {
     this.post(
       "/login",
-      this.handlePolicies(["PUBLIC"]),
+      this.handlePolicies(["NO_AUTH"]),
       validateUserLoginFields /* por el funcionamiento de passport fue necesario verificar que no vinieran vacios el email y la password */,
       passportCall("login"),
       userController.logUser
     );
     this.post(
       "/register",
-      this.handlePolicies(["PUBLIC"]),
+      this.handlePolicies(["NO_AUTH"]),
       validateUserRegisterFields /* por el funcionamiento de passport fue necesario verificar que no vinieran vacios el email y la password */,
       passportCall("register"),
       userController.registerUser
@@ -35,7 +35,7 @@ export default class UserRouter extends BaseRouter {
     );
     this.post(
       "/restorepassword",
-      this.handlePolicies(["PUBLIC"]),
+      this.handlePolicies(["NO_AUTH"]),
       userController.restoreUserPassword
     );
     this.put(
