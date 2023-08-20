@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { cookieExtractor, decodeJwtToken } from "../utils/utils.js";
-import { FORBIDDEN } from "../utils/httpReponses.js";
+import policies from "../config/policies.js";
+import { ForbiddenUserError } from "../service/error/UserError.js";
 export class BaseRouter {
   constructor() {
     this.router = Router();
@@ -24,39 +25,20 @@ export class BaseRouter {
   }
   /* ADMIN,PREMIUM,USER,NO_AUTH,*/
   handlePolicies(allowedPolicies) {
-    try {
-      return (req, res, next) => {
-        /* declaro un diccionario que tiene como key los endpoints y como value un objeto que como
-propiedades tiene los roles permitidos por ese endpoint y como valor de esos roles tenemos 
-un array con los http metodos permitidos para ese role */
-        const policiesDictionary = {
-          "/": { NO_AUTH: ["GET"] },
-          "/register": { NO_AUTH: ["GET"] },
-          "/restore": { NO_AUTH: ["GET"] },
-          "/products": {
-            ADMIN: ["GET"],
-            PREMIUM: ["GET"],
-            USER: ["GET"],
-          },
-          "/api/users/login": { NO_AUTH: ["POST"] },
-          "/api/products": {
-            ADMIN: ["GET", "PUT", "POST", "DELETE"],
-            PREMIUM: ["POST"],
-          },
-        };
-        /* Obtengo el user del jwt */
-        const user = this.getCurrentUser(req);
-        const userRole = user ? user.role.toUpperCase() : "NO_AUTH";
-        const requestedHttpMethod = req.method;
-        /* si hay params, con la regexp los removemos para que matcheen la logica de la politica de acceso, caso contrario la url queda original */
-        const requestedEndPoint =
-          Object.keys(req.params).length > 0
-            ? req.originalUrl.replace(/\/[^/]*$/, "")
-            : req.originalUrl;
-        console.log(requestedEndPoint);
-        /* obtengo el objeto con los roles permitidos para el endpoint requesteado */
-        const rolesPermissions = policiesDictionary[requestedEndPoint];
-
+    return (req, res, next) => {
+      /* Obtengo el user del jwt */
+      const user = this.getCurrentUser(req);
+      const userRole = user ? user.role.toUpperCase() : "NO_AUTH";
+      const requestedHttpMethod = req.method;
+      /* si hay params, con la regexp los removemos para que matcheen la logica de la politica de acceso, caso contrario la url queda original */
+      const requestedEndPoint =
+        Object.keys(req.params).length > 0
+          ? req.originalUrl.replace(/\/[^/]*$/, "")
+          : req.originalUrl;
+      /* obtengo el objeto con los roles permitidos para el endpoint requesteado */
+      const rolesPermissions = policies[requestedEndPoint];
+      console.log(requestedEndPoint);
+      try {
         /* si el rol del usuario matchea con alguno de los rolesPermissions 
         preguntar si el metodo requestado matchea  con los incluidos en el array  de ese rol.
         */
@@ -64,25 +46,23 @@ un array con los http metodos permitidos para ese role */
           const allowedHttpMethods = rolesPermissions[userRole];
           if (!allowedHttpMethods.includes(requestedHttpMethod)) {
             /* si el metodo requesteado no se incluye en el array, lanzamos un error indicandolo */
-            return res.status(FORBIDDEN).send({
-              status: FORBIDDEN,
-              message: "Not authorized to request this method",
-            });
+            throw new ForbiddenUserError(
+              "Not authorized to request this method"
+            );
           } else {
             req.user = user;
             return next();
           }
         } else {
-          /* si el rol no se encontro en los permitidos del endpoint entonces lanzamos el error pero diciendo que no tiene acceso al endpoint */
-          return res.status(FORBIDDEN).send({
-            status: FORBIDDEN,
-            message: "Not authorized to access this endpoint",
-          });
+          /* si el rol no se encontro en los permitidos del endpoint entonces lanzamos el error pero indicando que no tiene acceso al endpoint */
+          throw new ForbiddenUserError(
+            "Not authorized to access this endpoint"
+          );
         }
-      };
-    } catch (error) {
-      return next(error);
-    }
+      } catch (error) {
+        return next(error);
+      }
+    };
   }
   getCurrentUser(req) {
     try {

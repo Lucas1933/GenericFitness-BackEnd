@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import __dirname from "../path.js";
 import { ExpiredTokenError } from "../service/error/TokenError.js";
 export const generateToken = (incomingPayload, expiration) => {
   const token = jwt.sign(incomingPayload, process.env.JWT_KEY, {

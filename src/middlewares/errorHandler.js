@@ -11,6 +11,7 @@ import {
   NotRegisteredUserEmailError,
   AlreadyUsedPasswordError,
   InvalidUserIdError,
+  ForbiddenUserError,
 } from "../service/error/UserError.js";
 import {
   InvalidCartIdError,
@@ -33,6 +34,7 @@ const errorHandlersMap = new Map([
   [NotRegisteredUserEmailError, NotRegisteredUserEmailError.prototype.getError],
   [InvalidUserIdError, InvalidUserIdError.prototype.getError],
   [AlreadyUsedPasswordError, AlreadyUsedPasswordError.prototype.getError],
+  [ForbiddenUserError, ForbiddenUserError.prototype.getError],
   /* carts related errors */
   [InvalidCartIdError, InvalidCartIdError.prototype.getError],
   [NonExistentCartError, NonExistentCartError.prototype.getError],

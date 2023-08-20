@@ -1,4 +1,9 @@
-import { BAD_REQUEST, CONFLICT, NOT_FOUND } from "../../utils/httpReponses.js";
+import {
+  BAD_REQUEST,
+  CONFLICT,
+  FORBIDDEN,
+  NOT_FOUND,
+} from "../../utils/httpReponses.js";
 
 export class InvalidUserFieldError extends Error {
   constructor(message) {
@@ -49,6 +54,17 @@ export class InvalidUserIdError extends Error {
     super(message);
     this.name = "InvalidUserIdError";
     this.status = BAD_REQUEST;
+  }
+
+  getError() {
+    return { status: this.status, error: this.name, message: this.message };
+  }
+}
+export class ForbiddenUserError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ForbiddenUserError";
+    this.status = FORBIDDEN;
   }
 
   getError() {
