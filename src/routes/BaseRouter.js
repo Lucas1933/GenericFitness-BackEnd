@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { cookieExtractor, decodeJwtToken } from "../utils/utils.js";
+import { cookieExtractor, decodeJwtToken, getBaseUrl } from "../utils/utils.js";
 import policies from "../config/policies.js";
 import { ForbiddenUserError } from "../service/error/UserError.js";
 export class BaseRouter {
@@ -30,14 +30,21 @@ export class BaseRouter {
       const user = this.getCurrentUser(req);
       const userRole = user ? user.role.toUpperCase() : "NO_AUTH";
       const requestedHttpMethod = req.method;
+      const numberOfParams = Object.keys(req.params).length;
       /* si hay params, con la regexp los removemos para que matcheen la logica de la politica de acceso, caso contrario la url queda original */
       const requestedEndPoint =
-        Object.keys(req.params).length > 0
-          ? req.originalUrl.replace(/\/[^/]*$/, "")
+        numberOfParams > 0
+          ? getBaseUrl(req.originalUrl, numberOfParams)
           : req.originalUrl;
       /* obtengo el objeto con los roles permitidos para el endpoint requesteado */
       const rolesPermissions = policies[requestedEndPoint];
-      console.log(requestedEndPoint);
+      console.log(
+        "original",
+        req.originalUrl,
+        "end point",
+        requestedEndPoint,
+        Object.keys(req.params).length > 0
+      );
       try {
         /* si el rol del usuario matchea con alguno de los rolesPermissions 
         preguntar si el metodo requestado matchea  con los incluidos en el array  de ese rol.

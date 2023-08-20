@@ -2,9 +2,11 @@
 propiedades tiene los roles permitidos por ese endpoint y como valor de esos roles tenemos 
 un array con los http metodos permitidos para ese role */
 const policies = {
+  /* views */
   "/": { NO_AUTH: ["GET"] },
   "/register": { NO_AUTH: ["GET"] },
   "/restore": { NO_AUTH: ["GET"] },
+  "/newpassword": { NO_AUTH: ["GET"] },
   "/products": {
     ADMIN: ["GET"],
     PREMIUM: ["GET"],
@@ -22,8 +24,12 @@ const policies = {
   },
   "/api/users/premium": { ADMIN: ["PUT"] },
   "/api/products": {
-    ADMIN: ["GET", "PUT", "POST", "DELETE"],
+    ADMIN: ["GET", "POST", "PUT", "DELETE"],
     PREMIUM: ["POST"],
   },
+  "/api/carts": { USER: ["GET", "PUT"] },
+  "/api/carts/product": { USER: ["POST", "PUT", "DELETE"] },
+  "/api/carts/purchase": { USER: ["POST"] },
+  "/api/carts/empty": { USER: ["DELETE"] },
 };
 export default policies;
