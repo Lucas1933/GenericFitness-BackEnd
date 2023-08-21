@@ -5,6 +5,7 @@ import {
   InvalidCartProductQuantityError,
 } from "./error/CartError.js";
 import { InvalidProductIdError } from "./error/ProductError.js";
+import { ForbiddenUserError } from "./error/UserError.js";
 export default class CartService {
   constructor(repository) {
     this.repository = repository;
@@ -14,7 +15,7 @@ export default class CartService {
     return carts;
   }
   async getCartById(id) {
-    await this.isIdAndCartValid(id);
+    await this.isIdAndCartExistent(id);
     const cart = await this.repository.getCartById(id);
     return cart;
   }
@@ -26,24 +27,30 @@ export default class CartService {
       throw error;
     }
   }
-  async addProduct(cartId, productId) {
-    await this.isIdAndCartValid(cartId);
-    await productService.isIdAndProductValid(productId);
+  async addProduct(cartId, productId, user) {
+    await this.isIdAndCartExistent(cartId);
+    await productService.isIdAndProductExists(productId);
+    const product = await productService.getProductById(productId);
+    if (product.owner == user.email) {
+      throw new ForbiddenUserError(
+        "You do not have permission to add this product."
+      );
+    }
     const updatedCart = await this.repository.addProduct(cartId, productId);
     return updatedCart;
   }
   async fillCart(id, products) {
-    await this.isIdAndCartValid(id);
+    await this.isIdAndCartExistent(id);
     for (const eachProduct of products) {
       this.isQuantityValid(eachProduct);
-      await productService.isIdAndProductValid(eachProduct.product);
+      await productService.isIdAndProductExists(eachProduct.product);
     }
     const updatedCart = await this.repository.fillCart(id, products);
     return updatedCart;
   }
   async updateProduct(cartId, productId, quantity) {
-    await this.isIdAndCartValid(cartId);
-    await productService.isIdAndProductValid(productId);
+    await this.isIdAndCartExistent(cartId);
+    await productService.isIdAndProductExists(productId);
     this.isQuantityValid({ quantity });
     const updatedCart = await this.repository.updateProduct(
       cartId,
@@ -53,18 +60,18 @@ export default class CartService {
     return updatedCart;
   }
   async deleteCart(id) {
-    await this.isIdAndCartValid(id);
+    await this.isIdAndCartExistent(id);
     const deletedCart = await this.repository.deleteCart(id);
     return deletedCart;
   }
   async emptyCart(id) {
-    await this.isIdAndCartValid(id);
+    await this.isIdAndCartExistent(id);
     const emptyCart = await this.repository.emptyCart(id);
     return emptyCart;
   }
   async removeProduct(cartId, productId) {
-    await this.isIdAndCartValid(cartId);
-    await productService.isIdAndProductValid(productId);
+    await this.isIdAndCartExistent(cartId);
+    await productService.isIdAndProductExists(productId);
     const cart = await this.repository.getCartById(cartId);
     for (const eachProduct of cart.products) {
       const idsAreEqual = await productService.compareProductsIds(
@@ -84,12 +91,12 @@ export default class CartService {
     );
   }
   async getProductsIds(cartId) {
-    await this.isIdAndCartValid(cartId);
+    await this.isIdAndCartExistent(cartId);
     const products = await this.repository.getProductsIds(cartId);
     return products;
   }
   async getPurchaseAmount(cartId) {
-    await this.isIdAndCartValid(cartId);
+    await this.isIdAndCartExistent(cartId);
     const cart = await this.getCartById(cartId);
     const products = cart.products;
     let amount = 0;
@@ -108,15 +115,15 @@ export default class CartService {
     return amount;
   }
   /* considerar si deberia devolver el carrito */
-  async isIdAndCartValid(id) {
+  async isIdAndCartExistent(id) {
     /* se valida que la mongo ID sea valida */
     const isValid = await this.repository.isIdValid(id);
     if (!isValid) {
       throw new InvalidCartIdError(`the cart id ${id} is invalid`);
     }
-    const cart = await this.repository.getCartById(id);
+    const exists = await this.repository.cartExists(id);
     /*si la ID es valida entonces buscamos el cart, pero de no existir lanzamos un error */
-    if (!cart) {
+    if (!exists) {
       throw new NonExistentCartError(`the cart with id ${id} does not exists`);
     }
   }

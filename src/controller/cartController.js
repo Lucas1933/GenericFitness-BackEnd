@@ -36,7 +36,8 @@ export default class CartController {
     try {
       const cartId = req.params.cartId;
       const productId = req.params.productId;
-      const updatedCart = await cartService.addProduct(cartId, productId);
+      const user = req.user;
+      const updatedCart = await cartService.addProduct(cartId, productId, user);
       return res.status(OK).send({
         status: OK,
         message: "product added to the cart successfully",

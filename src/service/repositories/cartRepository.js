@@ -93,4 +93,8 @@ export default class CartRepository {
     const result = await cartModel.isIdValid(id);
     return result;
   }
+  async cartExists(id) {
+    const exists = await cartModel.exists({ _id: id });
+    return exists;
+  }
 }

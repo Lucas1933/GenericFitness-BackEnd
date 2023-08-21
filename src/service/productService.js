@@ -30,18 +30,18 @@ export default class ProductService {
     return products;
   }
   async getProductById(id) {
-    await this.isIdAndProductExistent(id);
+    await this.isIdAndProductExists(id);
     const product = await this.repository.getProductById(id);
     return product;
   }
   async updateProduct(id, product) {
-    await this.isIdAndProductExistent(id);
+    await this.isIdAndProductExists(id);
     await this.validateProductFields(product, { isUpdate: true });
     const updatedProduct = await this.repository.updateProduct(id, product);
     return updatedProduct;
   }
   async deleteProduct(id, user) {
-    await this.isIdAndProductExistent(id);
+    await this.isIdAndProductExists(id);
     const userRole = user.role.toUpperCase();
     if (userRole != "ADMIN") {
       const product = await this.getProductById(id);
@@ -95,7 +95,7 @@ export default class ProductService {
       );
     }
   }
-  async isIdAndProductExistent(id) {
+  async isIdAndProductExists(id) {
     /* se valida que la mongo ID sea valida */
     const isValid = await this.repository.isIdValid(id);
     if (!isValid) {
