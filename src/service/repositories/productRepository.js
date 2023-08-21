@@ -39,6 +39,10 @@ export default class ProductRepository {
     const deletedProduct = await productModel.findByIdAndDelete(id);
     return deletedProduct;
   }
+  async productExists(id) {
+    const exists = await productModel.exists({ _id: id });
+    return exists;
+  }
   async validateCode(code) {
     const exists = await productModel.exists({ code: code });
     return exists ? true : false;

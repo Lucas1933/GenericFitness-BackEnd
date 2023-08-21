@@ -4,6 +4,7 @@ import {
   InvalidProductIdError,
   NonExistentProductError,
 } from "./error/ProductError.js";
+import { ForbiddenUserError } from "./error/UserError.js";
 export default class ProductService {
   constructor(repository) {
     this.repository = repository;
@@ -17,7 +18,7 @@ export default class ProductService {
     return products;
   }
   async addProduct(product, user) {
-    await this.validateProductFields(product);
+    await this.validateProductFields(product, { isUpdate: false });
     if (user.role.toUpperCase() == "PREMIUM") {
       product.owner = user.email;
     }
@@ -29,18 +30,27 @@ export default class ProductService {
     return products;
   }
   async getProductById(id) {
-    await this.isIdAndProductValid(id);
+    await this.isIdAndProductExistent(id);
     const product = await this.repository.getProductById(id);
     return product;
   }
   async updateProduct(id, product) {
-    await this.isIdAndProductValid(id);
+    await this.isIdAndProductExistent(id);
     await this.validateProductFields(product, { isUpdate: true });
     const updatedProduct = await this.repository.updateProduct(id, product);
     return updatedProduct;
   }
-  async deleteProduct(id) {
-    await this.isIdAndProductValid(id);
+  async deleteProduct(id, user) {
+    await this.isIdAndProductExistent(id);
+    const userRole = user.role.toUpperCase();
+    if (userRole != "ADMIN") {
+      const product = await this.getProductById(id);
+      if (product.owner != user.email) {
+        throw new ForbiddenUserError(
+          "You do not have permission to delete this product."
+        );
+      }
+    }
     const deletedProduct = await this.repository.deleteProduct(id);
     return deletedProduct;
   }
@@ -85,15 +95,15 @@ export default class ProductService {
       );
     }
   }
-  async isIdAndProductValid(id) {
+  async isIdAndProductExistent(id) {
     /* se valida que la mongo ID sea valida */
     const isValid = await this.repository.isIdValid(id);
     if (!isValid) {
       throw new InvalidProductIdError(`the product id ${id} is invalid`);
     }
-    const product = await this.repository.getProductById(id);
+    const exists = await this.repository.productExists(id);
     /*si la ID es valida entonces buscamos el producto, pero de no existir lanzamos un error */
-    if (!product) {
+    if (!exists) {
       throw new NonExistentProductError(
         `the product with id ${id} does not exists`
       );

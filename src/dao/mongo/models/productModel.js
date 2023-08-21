@@ -12,7 +12,7 @@ const schema = new mongoose.Schema(
     stock: Number,
     owner: {
       type: String,
-      default: "admin",
+      default: "ADMIN",
     },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }

@@ -25,7 +25,7 @@ export default class ProductRouter extends BaseRouter {
     );
     this.delete(
       "/:productId",
-      this.handlePolicies(["ADMIN"]),
+      this.handlePolicies(["ADMIN", "PREMIUM"]),
       productController.deleteProduct
     );
   }

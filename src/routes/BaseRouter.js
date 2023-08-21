@@ -33,6 +33,7 @@ export class BaseRouter {
         if (!allowedPolicies.includes(userRole)) {
           throw new ForbiddenUserError("Access to this resource is forbidden.");
         } else {
+          req.user = user;
           return next();
         }
       } catch (error) {

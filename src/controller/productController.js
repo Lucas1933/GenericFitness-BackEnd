@@ -80,8 +80,10 @@ export default class ProductController {
 
   async deleteProduct(req, res, next) {
     try {
+      const user = req.user;
       const deletedProduct = await productService.deleteProduct(
-        req.params.productId
+        req.params.productId,
+        user
       );
       return res
         .status(OK)
