@@ -13,30 +13,31 @@ export default class CartRouter extends BaseRouter {
       this.handlePolicies(["USER"]),
       cartController.fillCart
     );
-    this.post(
-      "/product/:productId/:cartId",
-      this.handlePolicies(["USER"]),
-      cartController.addProduct
-    );
-    this.put(
-      "/product/:productId/:cartId",
-      this.handlePolicies(["USER"]),
-      cartController.updateProduct
-    );
     this.delete(
-      "/product/:productId/:cartId",
+      "/empty/:cartId",
       this.handlePolicies(["USER"]),
-      cartController.deleteProduct
+      cartController.emptyCart
     );
     this.post(
       "/purchase/:cartId",
       this.handlePolicies(["USER"]),
       cartController.purchase
     );
-    this.delete(
-      "/empty/:cartId",
+
+    this.post(
+      "/:cartId/product/:productId",
       this.handlePolicies(["USER"]),
-      cartController.emptyCart
+      cartController.addProduct
+    );
+    this.put(
+      "/:cartId/product/:productId",
+      this.handlePolicies(["USER"]),
+      cartController.updateProduct
+    );
+    this.delete(
+      "/:cartId/product/:productId",
+      this.handlePolicies(["USER"]),
+      cartController.deleteProduct
     );
   }
 }

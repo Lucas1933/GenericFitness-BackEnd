@@ -42,11 +42,3 @@ export const hashPassword = async (password) => {
   const hashedPassword = await bcrypt.hash(password, salt);
   return hashedPassword;
 };
-
-export const getBaseUrl = (url, count) => {
-  const segments = url.split("/");
-  if (segments.length > count) {
-    const baseUrl = segments.slice(0, -count).join("/");
-    return baseUrl;
-  }
-};
