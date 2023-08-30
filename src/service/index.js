@@ -1,14 +1,14 @@
-import CartService from "../service/cartService.js";
-import ProductService from "../service/productService.js";
-import ViewService from "../service/viewService.js";
-import UserService from "../service/userService.js";
-import TicketService from "./ticketService.js";
-import EmailService from "./emailService.js";
+import CartService from "./services/cart_service.js";
+import ProductService from "./services/product_service.js";
+import ViewService from "./services/view_service.js";
+import UserService from "./services/user_service.js";
+import TicketService from "./services/ticket_service.js";
+import EmailService from "./services/email_service.js";
 
-import UserRepository from "../service/repositories/userRepository.js";
-import CartRepository from "../service/repositories/cartRepository.js";
-import ProductRepository from "../service/repositories/productRepository.js";
-import TicketRepository from "./repositories/ticketRepository.js";
+import UserRepository from "./repositories/user_repository.js";
+import CartRepository from "./repositories/cart_repository.js";
+import ProductRepository from "./repositories/product_repository.js";
+import TicketRepository from "./repositories/ticket_repository.js";
 
 export const productService = new ProductService(new ProductRepository());
 export const cartService = new CartService(new CartRepository());

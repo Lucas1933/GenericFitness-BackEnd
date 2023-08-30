@@ -3,7 +3,7 @@ import {
   CONFLICT,
   FORBIDDEN,
   NOT_FOUND,
-} from "../../utils/httpReponses.js";
+} from "../../utils/http_responses.js";
 
 export class InvalidUserFieldError extends Error {
   constructor(message) {

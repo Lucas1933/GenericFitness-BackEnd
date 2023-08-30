@@ -1,5 +1,5 @@
-import ViewController from "../controller/viewController.js";
-import { BaseRouter } from "./baseRouter.js";
+import ViewController from "../controller/view_controller.js";
+import { BaseRouter } from "./base_router.js";
 const viewController = new ViewController();
 export default class ViewRouter extends BaseRouter {
   init() {

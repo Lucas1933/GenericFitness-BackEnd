@@ -1,4 +1,4 @@
-import { BAD_REQUEST, NOT_FOUND } from "../../utils/httpReponses.js";
+import { BAD_REQUEST, NOT_FOUND } from "../../utils/http_responses.js";
 
 export class InvalidCartIdError extends Error {
   constructor(message) {

@@ -1,4 +1,8 @@
-import { BAD_REQUEST, CONFLICT, NOT_FOUND } from "../../utils/httpReponses.js";
+import {
+  BAD_REQUEST,
+  CONFLICT,
+  NOT_FOUND,
+} from "../../utils/http_responses.js";
 export class ExistentProductCodeError extends Error {
   constructor(message) {
     super(message);

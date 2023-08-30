@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { cookieExtractor, decodeJwtToken } from "../utils/utils.js";
 
-import { ForbiddenUserError } from "../service/error/UserError.js";
+import { ForbiddenUserError } from "../service/error/user_error.js";
 export class BaseRouter {
   constructor() {
     this.router = Router();

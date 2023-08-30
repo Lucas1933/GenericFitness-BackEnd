@@ -1,5 +1,5 @@
 import { userService, cartService } from "../service/index.js";
-import { BAD_REQUEST, CREATED, OK } from "../utils/httpReponses.js";
+import { BAD_REQUEST, CREATED, OK } from "../utils/http_responses.js";
 
 export default class UserController {
   constructor() {}

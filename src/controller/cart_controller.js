@@ -1,5 +1,5 @@
 import { cartService, ticketService } from "../service/index.js";
-import { CREATED, OK } from "../utils/httpReponses.js";
+import { CREATED, OK } from "../utils/http_responses.js";
 export default class CartController {
   /* for testing purposes */
   async getCarts(req, res, next) {

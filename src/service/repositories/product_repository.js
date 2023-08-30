@@ -1,4 +1,4 @@
-import productModel from "../../dao/mongo/models/productModel.js";
+import productModel from "../../dao/mongo/models/product_model.js";
 export default class ProductRepository {
   async getPaginatedProducts(queryLimit, queryPage, querySort) {
     const options = {

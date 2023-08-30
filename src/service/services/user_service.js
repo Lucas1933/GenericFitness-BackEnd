@@ -4,15 +4,15 @@ import {
   generateToken,
   decodeJwtToken,
   hashPassword,
-} from "../utils/utils.js";
-import UserTokenDto from "../dto/userTokenDTO.js";
-import { emailService } from "./index.js";
+} from "../../utils/utils.js";
+import UserTokenDto from "../../dto/user_token_dto.js";
+import { emailService } from "../index.js";
 import {
   AlreadyUsedPasswordError,
   InvalidUserFieldError,
   InvalidUserIdError,
   NotRegisteredUserEmailError,
-} from "./error/UserError.js";
+} from "../error/user_error.js";
 
 export default class UserService {
   constructor(repository) {

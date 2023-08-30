@@ -4,16 +4,16 @@ import mongoose from "mongoose";
 import handlebars from "express-handlebars";
 import cookieParser from "cookie-parser";
 
-import ProductRouter from "./routes/productRouter.js";
-import UserRouter from "./routes/userRouter.js";
-import ViewRouter from "./routes/viewRouter.js";
-import CartRouter from "./routes/cartRouter.js";
-import TestRouter from "./routes/testRouter.js";
+import ProductRouter from "./routes/product_router.js";
+import UserRouter from "./routes/user_router.js";
+import ViewRouter from "./routes/view_router.js";
+import CartRouter from "./routes/cart_router.js";
+import TestRouter from "./routes/test_router.js";
 
 import passportInit from "./config/passport.js";
 
 import __dirname from "./path.js";
-import errorHandler from "./middlewares/errorHandler.js";
+import errorHandler from "./middlewares/error_handler.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;

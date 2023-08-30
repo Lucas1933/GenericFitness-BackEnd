@@ -3,8 +3,8 @@ import {
   ExistentProductCodeError,
   InvalidProductIdError,
   NonExistentProductError,
-} from "./error/ProductError.js";
-import { ForbiddenUserError } from "./error/UserError.js";
+} from "../error/product_error.js";
+import { ForbiddenUserError } from "../error/user_error.js";
 export default class ProductService {
   constructor(repository) {
     this.repository = repository;

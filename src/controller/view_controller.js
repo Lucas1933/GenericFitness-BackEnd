@@ -1,6 +1,4 @@
 import { viewService } from "../service/index.js";
-import { UNAUTHORIZED } from "../utils/httpReponses.js";
-import { decodeJwtToken } from "../utils/utils.js";
 export default class ViewController {
   renderLogin(req, res) {
     res.render("login");

@@ -1,10 +1,10 @@
-import { INTERNAL_SERVER_ERROR } from "../utils/httpReponses.js";
+import { INTERNAL_SERVER_ERROR } from "../utils/http_responses.js";
 import {
   ExistentProductCodeError,
   InvalidProductFieldError,
   InvalidProductIdError,
   NonExistentProductError,
-} from "../service/error/ProductError.js";
+} from "../service/error/product_error.js";
 import {
   InvalidUserFieldError,
   ExistentUserEmailError,
@@ -12,13 +12,13 @@ import {
   AlreadyUsedPasswordError,
   InvalidUserIdError,
   ForbiddenUserError,
-} from "../service/error/UserError.js";
+} from "../service/error/user_error.js";
 import {
   InvalidCartIdError,
   NonExistentCartError,
   InvalidCartProductQuantityError,
-} from "../service/error/CartError.js";
-import { ExpiredTokenError } from "../service/error/TokenError.js";
+} from "../service/error/cart_error.js";
+import { ExpiredTokenError } from "../service/error/token_error.js";
 /* Mapeo la instancia del error (key) con su respectivo metodo getError (value) encargado de construir 
   la respuesta
 */

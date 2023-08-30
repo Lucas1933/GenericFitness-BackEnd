@@ -1,4 +1,4 @@
-import { UNAUTHORIZED } from "../../utils/httpReponses.js";
+import { UNAUTHORIZED } from "../../utils/http_responses.js";
 
 export class ExpiredTokenError extends Error {
   constructor(message) {

@@ -1,5 +1,5 @@
 import { productService } from "../service/index.js";
-import { CREATED, OK } from "../utils/httpReponses.js";
+import { CREATED, OK } from "../utils/http_responses.js";
 export default class ProductController {
   async getPaginatedProducts(req, res, next) {
     try {

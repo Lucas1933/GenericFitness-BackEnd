@@ -1,11 +1,11 @@
-import UserController from "../controller/userController.js";
-import { BaseRouter } from "./baseRouter.js";
+import UserController from "../controller/user_controller.js";
+import { BaseRouter } from "./base_router.js";
 import passport from "passport";
-import { passportCall } from "../middlewares/passportCall.js";
+import { passportCall } from "../middlewares/passport_call.js";
 import {
   validateUserRegisterFields,
   validateUserLoginFields,
-} from "../middlewares/validateUserFields.js";
+} from "../middlewares/validate_user_fields.js";
 const userController = new UserController();
 export default class UserRouter extends BaseRouter {
   init() {

@@ -1,5 +1,5 @@
-import { BaseRouter } from "./baseRouter.js";
-import ProductController from "../controller/productController.js";
+import { BaseRouter } from "./base_router.js";
+import ProductController from "../controller/product_controller.js";
 const productController = new ProductController();
 export default class ProductRouter extends BaseRouter {
   init() {

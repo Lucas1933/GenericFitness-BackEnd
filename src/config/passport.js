@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 
 import { cartService, userService } from "../service/index.js";
 import { cookieExtractor, hashPassword } from "../utils/utils.js";
-import { CONFLICT, UNAUTHORIZED } from "../utils/httpReponses.js";
+import { CONFLICT, UNAUTHORIZED } from "../utils/http_responses.js";
 
 const LocalStrategy = local.Strategy;
 const GitHubStrategy = gitHub.Strategy;

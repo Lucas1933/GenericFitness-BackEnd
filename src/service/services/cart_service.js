@@ -1,11 +1,11 @@
-import { productService } from "./index.js";
+import { productService } from "../index.js";
 import {
   InvalidCartIdError,
   NonExistentCartError,
   InvalidCartProductQuantityError,
-} from "./error/CartError.js";
-import { InvalidProductIdError } from "./error/ProductError.js";
-import { ForbiddenUserError } from "./error/UserError.js";
+} from "../error/cart_error.js";
+import { InvalidProductIdError } from "../error/product_error.js";
+import { ForbiddenUserError } from "../error/user_error.js";
 export default class CartService {
   constructor(repository) {
     this.repository = repository;
